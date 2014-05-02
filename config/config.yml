@@ -1,0 +1,21 @@
+development:
+  codesign_certificate: "iPhone Developer: Manuel Dudda (68L6JUXN6D)"
+  provisioning_profile: "config/provision/mariokartdev.mobileprovision"
+  entitlements:
+    aps-environment: 'development'
+  info_plist:
+    host: "https://eloboter-api.herokuapp.com"
+    UIBackgroundModes:
+      - fetch
+      - location
+
+release:
+  codesign_certificate: "iPhone Distribution: DUDDA Web-Entwicklung GbR"
+  provisioning_profile: "config/provision/adhoc.mobileprovision"
+  entitlements:
+    aps-environment: 'production'
+  info_plist:
+    host: "https://eloboter-api.herokuapp.com"
+    UIBackgroundModes:
+      - fetch
+      - location
