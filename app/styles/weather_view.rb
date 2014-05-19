@@ -1,10 +1,10 @@
 Teacup::Stylesheet.new :weather_view do
 
   style :image_view1,
-        frame: [['0%', '0%'], ['100%', '50%']]
+        frame: [['0%', '5%'], ['100%', '55%']]
 
   style :image_view2,
-        frame: [['0%', '50%'], ['100%', '50%']]
+        frame: [['0%', '55%'], ['100%', '50%']]
 
   style :text_view,
         textAlignment: UITextAlignmentCenter,
@@ -18,11 +18,11 @@ Teacup::Stylesheet.new :weather_view do
         width: 260, height: 50
 
   style :forecast_title_view, extends: :text_view,
-        top: '35%', left: 80,
+        top: '40%', left: 80,
         width: 160, height: 50
 
   style :forecast_temp_view, extends: :text_view,
-        top: '55%', left: 60,
+        top: '60%', left: 60,
         width: 200, height: 80,
         font: UIFont.fontWithName('Arvo', size: 80)
 
