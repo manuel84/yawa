@@ -6,26 +6,25 @@ Teacup::Stylesheet.new :weather_view do
   style :image_view2,
         frame: [['0%', '50%'], ['100%', '50%']]
 
-  style :title_view,
-        top: 50, left: 10,
-        width: 300, height: 100,
+  style :text_view,
         textAlignment: UITextAlignmentCenter,
         font: UIFont.fontWithName('Arvo', size: 30),
-        textColor: "#aabbcc".uicolor
+        textColor: "#000000".uicolor,
+        backgroundColor: UIColor.lightGrayColor,
+        alpha: 0.6
 
-  style :forecast_temp_view,
-          top: '50%', left: 60,
-          width: 200, height: 100,
-          textAlignment: UITextAlignmentCenter,
-          font: UIFont.fontWithName('Arvo', size: 80),
-          textColor: "#aabbcc".uicolor
+  style :title_view, extends: :text_view,
+        top: 80, left: 30,
+        width: 260, height: 50
 
-  style :forecast_title_view,
-        top: '35%', left: 60,
-        width: 200, height: 100,
-        textAlignment: UITextAlignmentCenter,
-        font: UIFont.fontWithName('Arvo', size: 30),
-        textColor: "#aabbcc".uicolor
+  style :forecast_title_view, extends: :text_view,
+        top: '35%', left: 80,
+        width: 160, height: 50
+
+  style :forecast_temp_view, extends: :text_view,
+        top: '55%', left: 60,
+        width: 200, height: 80,
+        font: UIFont.fontWithName('Arvo', size: 80)
 
   style :result,
         font: UIFont.fontWithName('Arvo', size: 50),

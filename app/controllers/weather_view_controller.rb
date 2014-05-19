@@ -9,6 +9,17 @@ class WeatherViewController < UIViewController
     @title_view = subview UILabel, :title_view
     @forecast_temp_view = subview UILabel, :forecast_temp_view
     @forecast_title_view = subview UILabel, :forecast_title_view
+    @forecast_temp_view.layer.cornerRadius = 60.0
+    @forecast_title_view.layer.cornerRadius = 60.0
+
+    mask_path = UIBezierPath.bezierPathWithRoundedRect(@title_view.bounds,
+                                                       byRoundingCorners: UIRectCornerTopLeft | UIRectCornerBottomRight,
+                                                       cornerRadii: CGSizeMake(40.0, 100.0))
+    mask_layer = CAShapeLayer.layer
+    mask_layer.frame = @title_view.bounds
+    mask_layer.path = mask_path.CGPath
+    #@title_view.layer.mask = mask_layer
+
   end
 
   def show_info
