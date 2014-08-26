@@ -42,7 +42,7 @@ class WeatherViewController < UIViewController
 
 
     @indicator = UIActivityIndicatorView.large
-    @indicator.frame = [[160, 200], [20, 20]]
+    @indicator.frame = [[150, 200], [20, 20]]
     view.addSubview(@indicator)
     @indicator.hidesWhenStopped = true
     @indicator.startAnimating

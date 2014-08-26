@@ -18,7 +18,7 @@ APP_CONFIG = YAML.load_file('config/config.yml').freeze
 Motion::Project::App.setup do |app|
   app.detect_dependencies = false
   # Use `rake config' to see complete project settings.
-  app.name = 'yawa'
+  app.name = 'YAWA'
   app.identifier = 'web.dudda.yawa'
   app.version = '0.1.1'
   app.short_version = '0.1.1'
