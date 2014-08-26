@@ -3,25 +3,6 @@ class WeatherViewController < UIViewController
   attr_accessor :data
   stylesheet :weather_view
 
-  layout :root do
-    @image_view1 = subview UIImageView, :image_view1
-    @image_view2 = subview UIImageView, :image_view2
-    @title_view = subview UILabel, :title_view
-    @forecast_temp_view = subview UILabel, :forecast_temp_view
-    @forecast_title_view = subview UILabel, :forecast_title_view
-    @forecast_temp_view.layer.cornerRadius = 60.0
-    @forecast_title_view.layer.cornerRadius = 60.0
-
-    mask_path = UIBezierPath.bezierPathWithRoundedRect(@title_view.bounds,
-                                                       byRoundingCorners: UIRectCornerTopLeft | UIRectCornerBottomRight,
-                                                       cornerRadii: CGSizeMake(40.0, 100.0))
-    mask_layer = CAShapeLayer.layer
-    mask_layer.frame = @title_view.bounds
-    mask_layer.path = mask_path.CGPath
-    #@title_view.layer.mask = mask_layer
-
-  end
-
   def show_info
     NSLog "show info"
     self.navigationController.pushViewController(InfoViewController.alloc.init, animated: true)
@@ -37,9 +18,31 @@ class WeatherViewController < UIViewController
         action: "show_info")
 
     self.navigationItem.rightBarButtonItem = right_info_image
+    self.view = UIScrollView.new
+    @image_views = {}
+    @text_views = {}
+    layout(self.view, :root) do
+      @image_views[0] = subview UIImageView, :image_view1
+      @image_views[1] = subview UIImageView, :image_view2
+      @image_views[2] = subview UIImageView, :image_view3
+      @image_views[3] = subview UIImageView, :image_view4
+      @image_views.values.each { |text_view| text_view.fade_out }
+
+      @text_views[:title] = subview UILabel, :title_view
+      @text_views[:forecast_temp] = subview UILabel, :forecast_temp_view
+      @text_views[:forecast_title] = subview UILabel, :forecast_title_view
+
+      @text_views.values.each do |text_view|
+        text_view.layer.masksToBounds= true
+        text_view.layer.cornerRadius = 6
+        text_view.fade_out
+      end
+
+    end
+
 
     @indicator = UIActivityIndicatorView.large
-    @indicator.center = view.center
+    @indicator.frame = [[160, 200], [20, 20]]
     view.addSubview(@indicator)
     @indicator.hidesWhenStopped = true
     @indicator.startAnimating
@@ -49,20 +52,23 @@ class WeatherViewController < UIViewController
       @data = response
       @indicator.stopAnimating
       if @data
-        @title_view.text = @data.object['name']
-        @forecast_temp_view.text = @data.object['weather_forecasts'][0]['temp']['amount'].to_i.to_s + "° C"
-        @forecast_title_view.text = @data.object['weather_forecasts'][0]['title']
+        @text_views[:title].text = @data.object['name']
+        @text_views[:forecast_temp].text = @data.object['weather_forecasts'][0]['temp']['amount'].to_i.to_s + ' °C'
+        @text_views[:forecast_title].text = @data.object['weather_forecasts'][0]['title']
 
         photos = @data.object['photos']
-        [@image_view1, @image_view2].each_with_index do |image_view, i|
+        @image_views.values.each_with_index do |image_view, i|
           BW::HTTP.get(photos[i]['photo_url']) do |response|
             if response.ok?
-              image_view.image = UIImage.alloc.initWithData(response.body)
+              im = UIImage.alloc.initWithData(response.body)
+              image_view.image = im #.scale_to([image_view.height, 120])
             else
               puts "BAD RESPONSE"
             end
           end
         end
+        @image_views.values.each { |text_view| text_view.fade_in(duration: 3.0) }
+        @text_views.values.each { |text_view| text_view.fade_in(duration: 3.0) }
       end
     end
   end
