@@ -11,25 +11,30 @@ Teacup::Stylesheet.new :weather_view do
   style :image_view4,
         frame: [[0, 540], [320, 180]]
 
+  @background_color = UIColor.colorWithRed(0/255.0, green:0/255.0, blue:0/255.0, alpha: 0.6)
+
   style :text_view,
         textAlignment: UITextAlignmentCenter,
         font: UIFont.fontWithName('Arvo', size: 30),
         textColor: UIColor.lightGrayColor,
-        backgroundColor: '#000000'.uicolor,
-        alpha: 0.8
+        backgroundColor: @background_color
 
   style :title_view, extends: :text_view,
         top: 60, left: 30,
         width: 260, height: 50
 
   style :forecast_temp_view, extends: :text_view,
-        top: 235, left: 60,
+        top: 205, left: 60,
         width: 200, height: 80,
         font: UIFont.fontWithName('Arvo', size: 80)
 
   style :forecast_title_view, extends: :text_view,
-        top: 430, left: 80,
+        top: 300, left: 80,
         width: 160, height: 50
+
+  style :forecast_date_view, extends: :text_view,
+        top: 430, left: 60,
+        width: 200, height: 50
 
 
   style :result,

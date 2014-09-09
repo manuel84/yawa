@@ -9,11 +9,18 @@ class Location
         @latitude = location.latitude
         @longitude = location.longitude * (1)
         NSLog "api/locations?lat=#{@latitude}&long=#{@longitude}"
-        AFMotion::SessionClient.shared.get("api/locations?lat=#{@latitude}&long=#{@longitude}") do |result|
-          if result.success?
-            callback.call(result)
-          else
-            callback.call(false, result.error)
+        @cache = NSUserDefaults.standardUserDefaults
+        result = nil# NSKeyedUnarchiver.unarchiveObjectWithData(@cache['data'])
+        if result
+          callback.call(result)
+        else
+          AFMotion::SessionClient.shared.get("api/locations?lat=#{@latitude}&long=#{@longitude}") do |result|
+            #@cache['data'] = NSKeyedArchiver.archivedDataWithRootObject(result)
+            if result.success?
+              callback.call(result)
+            else
+              callback.call(false, result.error)
+            end
           end
         end
       end

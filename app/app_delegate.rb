@@ -21,9 +21,9 @@ class AppDelegate
     #UIStatusBarStyleBlackTranslucent)
 
     if ipad?
-      @main_controller = WeatherViewIpadController.alloc.init
+      @main_controller = WeatherViewIpadController.alloc.initWithDay
     else
-      @main_controller = WeatherViewIphoneController.alloc.init
+      @main_controller = WeatherViewIphoneController.alloc.initWithDay
     end
     @window.rootViewController = UINavigationController.alloc.initWithRootViewController(@main_controller)
     true

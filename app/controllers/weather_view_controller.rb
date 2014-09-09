@@ -1,7 +1,14 @@
 class WeatherViewController < UIViewController
   WEEKDAYS = %w(Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag)
-  attr_accessor :data
+  attr_accessor :data, :day, :image_views, :text_views, :animate
   stylesheet :weather_view
+
+  def initWithDay(day=0, animate=true)
+    initWithNibName nil, bundle: nil
+    @day = day
+    @animate = animate
+    self
+  end
 
   def show_info
     NSLog "show info"
@@ -10,15 +17,31 @@ class WeatherViewController < UIViewController
 
   def layoutDidLoad
     super
+
+
+
     self.title = 'Yet Another Weather App'
     right_info_image = UIBarButtonItem.alloc.initWithImage(
-        'navbar_info_iphone@2x.png'.uiimage.scale_to([21, 21]),
+        'navbar_info_iphone@2x.png'.uiimage.scale_to([20, 20]),
         style: UIBarButtonItemStyleBordered,
         target: self,
         action: "show_info")
 
     self.navigationItem.rightBarButtonItem = right_info_image
+    self.navigationItem.setHidesBackButton true
     self.view = UIScrollView.new
+    self.view.when_swiped do
+      if @day < 7
+        self.navigationController.pushViewController(self.class.alloc.initWithDay(@day+1, false), animated: true)
+      end
+    end.direction = UISwipeGestureRecognizerDirectionLeft
+
+    self.view.when_swiped do
+      if @day >= 1
+        self.navigationController.popViewControllerAnimated animated: true
+      end
+      # do if swiped from left to right
+    end.direction = UISwipeGestureRecognizerDirectionRight
     @image_views = {}
     @text_views = {}
     layout(self.view, :root) do
@@ -31,30 +54,33 @@ class WeatherViewController < UIViewController
       @text_views[:title] = subview UILabel, :title_view
       @text_views[:forecast_temp] = subview UILabel, :forecast_temp_view
       @text_views[:forecast_title] = subview UILabel, :forecast_title_view
+      @text_views[:forecast_date_view] = subview UILabel, :forecast_date_view
 
       @text_views.values.each do |text_view|
-        text_view.layer.masksToBounds= true
+        text_view.layer.masksToBounds = true
         text_view.layer.cornerRadius = 6
         text_view.fade_out
       end
 
     end
+    @text_views[:forecast_date_view].text = (Time.now + @day.days).strftime '%a, %d.%m'
 
-
-    @indicator = UIActivityIndicatorView.large
-    @indicator.frame = [[150, 200], [20, 20]]
-    view.addSubview(@indicator)
-    @indicator.hidesWhenStopped = true
-    @indicator.startAnimating
+    if @animate
+      @indicator = UIActivityIndicatorView.large
+      @indicator.frame = [[150, 200], [20, 20]]
+      view.addSubview(@indicator)
+      @indicator.hidesWhenStopped = true
+      @indicator.startAnimating
+    end
 
     @data ||= []
     Location.all do |response|
       @data = response
-      @indicator.stopAnimating
+      @indicator.stopAnimating if @animate
       if @data
         @text_views[:title].text = @data.object['name']
-        @text_views[:forecast_temp].text = @data.object['weather_forecasts'][0]['temp']['amount'].to_i.to_s + ' °C'
-        @text_views[:forecast_title].text = @data.object['weather_forecasts'][0]['title']
+        @text_views[:forecast_temp].text = @data.object['weather_forecasts'][@day]['temp']['amount'].to_i.to_s + ' °C'
+        @text_views[:forecast_title].text = @data.object['weather_forecasts'][@day]['title']
 
         photos = @data.object['photos']
         @image_views.values.each_with_index do |image_view, i|
@@ -67,10 +93,19 @@ class WeatherViewController < UIViewController
             end
           end
         end
-        @image_views.values.each { |text_view| text_view.fade_in(duration: 3.0) }
-        @text_views.values.each { |text_view| text_view.fade_in(duration: 3.0) }
       end
+      @animate ? animate_views : show_views
     end
+  end
+
+  def animate_views
+    @image_views.values.each { |text_view| text_view.fade_in(duration: 3.0) }
+    @text_views.values.each { |text_view| text_view.fade_in(duration: 3.0) }
+  end
+
+  def show_views
+    @image_views.values.each { |text_view| text_view.fade_in(duration: 0.0) }
+    @text_views.values.each { |text_view| text_view.fade_in(duration: 0.0) }
   end
 
 end
