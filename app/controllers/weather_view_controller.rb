@@ -15,8 +15,11 @@ class WeatherViewController < UIViewController
   end
 
   def show_info
-    NSLog 'show info'
+    #@info_controller = InfoViewController.alloc.init
+    #info_controller.navigationItem.backBarButtonItem = UIBarButtonItem.alloc.initWithTitle("title", style: UIBarButtonItemStyleBordered, target: nil, action: nil)
+    #info_controller.navigationItem.leftBarButtonItem.title = "xyz"
     self.navigationController.pushViewController(InfoViewController.alloc.init, animated: true)
+    #NSLog info_controller.navigationItem.backBarButtonItem # why nil???
   end
 
   def layoutDidLoad
@@ -41,7 +44,7 @@ class WeatherViewController < UIViewController
 
     self.view.when_swiped do
       if @day >= 1
-        self.navigationController.popViewControllerAnimated animated: true
+        self.navigationController.popViewControllerAnimated animated: false
       end
       # do if swiped from left to right
     end.direction = UISwipeGestureRecognizerDirectionRight
