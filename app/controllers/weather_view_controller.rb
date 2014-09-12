@@ -1,5 +1,6 @@
 class WeatherViewController < UIViewController
   WEEKDAYS = %w(Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag)
+  WEEKDAY_COLORS = %w(#AB6323 #32A364 #3263EF #AB63AB #A26353 #1A3362 #326323)
   attr_accessor :data, :day, :image_views, :text_views, :animate
   stylesheet :weather_view
 
@@ -11,7 +12,7 @@ class WeatherViewController < UIViewController
   end
 
   def show_info
-    NSLog "show info"
+    NSLog 'show info'
     self.navigationController.pushViewController(InfoViewController.alloc.init, animated: true)
   end
 
@@ -89,18 +90,20 @@ class WeatherViewController < UIViewController
               im = UIImage.alloc.initWithData(response.body)
               image_view.image = im #.scale_to([image_view.height, 120])
             else
-              puts "BAD RESPONSE"
+              puts 'BAD RESPONSE'
             end
           end
         end
       end
       @animate ? animate_views : show_views
+      @text_views[:forecast_date_view].backgroundColor = WEEKDAY_COLORS[(Time.now + @day.days).strftime('%u').to_i-1].uicolor
     end
   end
 
   def animate_views
     @image_views.values.each { |text_view| text_view.fade_in(duration: 3.0) }
     @text_views.values.each { |text_view| text_view.fade_in(duration: 3.0) }
+
   end
 
   def show_views
