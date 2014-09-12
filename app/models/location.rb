@@ -6,18 +6,18 @@ class Location
       if location.is_a?(Hash) && location[:error]
         NSLog "can't geoloc"
       else
-        @latitude = location.latitude
-        @longitude = location.longitude * (1)
-        NSLog "api/locations?lat=#{@latitude}&long=#{@longitude}"
-        @cache = NSUserDefaults.standardUserDefaults
-        result = nil# NSKeyedUnarchiver.unarchiveObjectWithData(@cache['data'])
+        @latitude = location.latitude.round(2)
+        @longitude = (location.longitude * (1)).round(2)
+        url = "api/locations?lat=#{@latitude}&long=#{@longitude}"
+        result = Cache.read Time.now.strftime('%y%m%d')+url
         if result
+          NSLog 'use cache'
           callback.call(result)
         else
-          AFMotion::SessionClient.shared.get("api/locations?lat=#{@latitude}&long=#{@longitude}") do |result|
-            #@cache['data'] = NSKeyedArchiver.archivedDataWithRootObject(result)
+          AFMotion::SessionClient.shared.get(url) do |result|
+            Cache.write Time.now.strftime('%y%m%d')+url, result.object
             if result.success?
-              callback.call(result)
+              callback.call(result.object)
             else
               callback.call(false, result.error)
             end

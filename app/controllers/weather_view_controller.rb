@@ -78,11 +78,11 @@ class WeatherViewController < UIViewController
       @data = response
       @indicator.stopAnimating if @animate
       if @data
-        @text_views[:title].text = @data.object['name']
-        @text_views[:forecast_temp].text = @data.object['weather_forecasts'][@day]['temp']['amount'].to_i.to_s + ' °C'
-        @text_views[:forecast_title].text = @data.object['weather_forecasts'][@day]['title']
+        @text_views[:title].text = @data['name']
+        @text_views[:forecast_temp].text = @data['weather_forecasts'][@day]['temp']['amount'].to_i.to_s + ' °C'
+        @text_views[:forecast_title].text = @data['weather_forecasts'][@day]['title']
 
-        photos = @data.object['photos']
+        photos = @data['photos']
         @image_views.values.each_with_index do |image_view, i|
           BW::HTTP.get(photos[i]['photo_url']) do |response|
             if response.ok?
