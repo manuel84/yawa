@@ -26,6 +26,7 @@ Teacup::Stylesheet.new :weather_view do
   style :forecast_temp_view, extends: :text_view,
         top: 205, left: 60,
         width: 200, height: 80,
+        textColor: UIColor.darkGrayColor,
         font: UIFont.fontWithName('Arvo', size: 80)
 
   style :forecast_title_view, extends: :text_view,

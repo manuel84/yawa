@@ -1,6 +1,9 @@
 class WeatherViewController < UIViewController
   WEEKDAYS = %w(Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag)
   WEEKDAY_COLORS = %w(#AB6323 #32A364 #3263EF #AB63AB #A26353 #1A3362 #326323)
+  MAX_TEMP = 45
+  MIN_TEMP = 0
+  OFFSET_TEMP = 10
   attr_accessor :data, :day, :image_views, :text_views, :animate
   stylesheet :weather_view
 
@@ -18,7 +21,6 @@ class WeatherViewController < UIViewController
 
   def layoutDidLoad
     super
-
 
 
     self.title = 'Yet Another Weather App'
@@ -80,7 +82,17 @@ class WeatherViewController < UIViewController
       @indicator.stopAnimating if @animate
       if @data
         @text_views[:title].text = @data['name']
-        @text_views[:forecast_temp].text = @data['weather_forecasts'][@day]['temp']['amount'].to_i.to_s + ' °C'
+        temperature = @data['weather_forecasts'][@day]['temp']['amount'].to_i
+        @text_views[:forecast_temp].text = temperature.to_s + ' °C'
+        threshold = 100
+        hex_val = (([MIN_TEMP, [(temperature+OFFSET_TEMP), MAX_TEMP].min].max)*255/MAX_TEMP).to_s(16)
+        green = hex_val.hex < threshold ? hex_val : (255 - hex_val.hex).to_s(16)
+        other = hex_val.hex < threshold ? ([100, [80, green.hex].min].max).to_s(16) : ([0, [80, green.hex].min].max).to_s(16)
+        green = '0'+green if green.length <= 1 # normalize '3' => '03'
+        other = '0'+other if other.length <= 1 # normalize '3' => '03'
+        red = hex_val.hex < threshold ? other : 'ff'
+        blue = hex_val.hex < threshold ? 'ff' : other #(255 - hex_val.hex).to_s(16)
+        @text_views[:forecast_temp].backgroundColor = "##{red}#{green}#{blue}".uicolor(0.8)
         @text_views[:forecast_title].text = @data['weather_forecasts'][@day]['title']
 
         photos = @data['photos']
@@ -96,7 +108,7 @@ class WeatherViewController < UIViewController
         end
       end
       @animate ? animate_views : show_views
-      @text_views[:forecast_date_view].backgroundColor = WEEKDAY_COLORS[(Time.now + @day.days).strftime('%u').to_i-1].uicolor
+      @text_views[:forecast_date_view].backgroundColor = WEEKDAY_COLORS[(Time.now + @day.days).strftime('%u').to_i-1].uicolor(0.8)
     end
   end
 
