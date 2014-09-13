@@ -25,7 +25,7 @@ class AppDelegate
     else
       @main_controller = WeatherViewIphoneController.alloc.initWithDay
     end
-    @window.rootViewController = UINavigationController.alloc.initWithRootViewController(@main_controller)
+    @window.rootViewController = @main_controller#UINavigationController.alloc.initWithRootViewController(@main_controller)
     true
   end
 

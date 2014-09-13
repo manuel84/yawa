@@ -4,7 +4,7 @@ class WeatherViewController < UIViewController
   MAX_TEMP = 45
   MIN_TEMP = 0
   OFFSET_TEMP = 10
-  attr_accessor :data, :day, :image_views, :text_views, :animate, :number_of_pages
+  attr_accessor :data, :day, :image_views, :text_views, :animate, :number_of_pages, :offset_top
   stylesheet :weather_view
 
   def initWithDay(day=0, animate=true)
@@ -18,7 +18,7 @@ class WeatherViewController < UIViewController
     super
     NSLog "didLoad"
 
-    init_navigation_bar
+    #init_navigation_bar
 
     @number_of_pages = 7
 
@@ -70,7 +70,7 @@ class WeatherViewController < UIViewController
     end
 
     @pageControl = UIPageControl.alloc.init
-    @pageControl.frame = CGRectMake(0, 0, App.window.frame.size.width, 0)
+    @pageControl.frame = CGRectMake(0, 0, App.window.frame.size.width, 80)
     @pageControl.numberOfPages = @number_of_pages
     @pageControl.currentPage = 0
 
@@ -101,7 +101,7 @@ class WeatherViewController < UIViewController
         'navbar_info_iphone@2x.png'.uiimage.scale_to([20, 20]),
         style: UIBarButtonItemStyleBordered,
         target: self,
-        action: "show_info")
+        action: 'show_info')
 
     self.navigationItem.rightBarButtonItem = right_info_image
     self.navigationItem.setHidesBackButton true
@@ -109,12 +109,12 @@ class WeatherViewController < UIViewController
 
   def init_scroll_view
     @scrollView = UIScrollView.alloc.init
-    @scrollView.frame = CGRectMake(0, 0, App.window.size.width, App.window.size.height)
+    @scrollView.frame = CGRectMake(0, 0, App.window.frame.size.width, App.window.frame.size.height)
 
     @scrollView.pagingEnabled = true
     @scrollView.backgroundColor = UIColor.blackColor
 
-    @scrollView.contentSize = CGSizeMake(@scrollView.frame.size.width * @number_of_pages, App.window.size.height)
+    @scrollView.contentSize = CGSizeMake(@scrollView.frame.size.width * @number_of_pages, App.window.frame.size.height)
 
     @scrollView.showsHorizontalScrollIndicator = false
     @scrollView.showsVerticalScrollIndicator = false
@@ -129,12 +129,12 @@ class WeatherViewController < UIViewController
     single = false
     if top_offset_nr.nil? # do fullscreen
       top_offset_nr = 0
-      height = App.window.size.height
+      height = App.window.size.height # -68
       single = true
     end
     image = UIImage.alloc.initWithData(data)
-    view = UIView.alloc.initWithFrame(CGRectMake(width * page, top_offset_nr*height, width, height))
-    image.scale_to_fill([width, height], position: :center)
+    view = UIView.alloc.initWithFrame(CGRectMake(width * page, [0,top_offset_nr*height].max, width, @scrollView.frame.size.height))
+    image.scale_to_fill([width, @scrollView.frame.size.height], position: :center)
     view.backgroundColor = UIColor.alloc.initWithPatternImage(image)
     @scrollView.addSubview(view)
 
@@ -188,7 +188,7 @@ class WeatherViewController < UIViewController
       end
     end
     if top
-      forecast_title_view.position = [forecast_title_view.position[0], 80]
+      forecast_title_view.position = [forecast_title_view.position[0], 65]
       #NSLog forecast_title_view.position
     end
     forecast_title_view
@@ -200,7 +200,7 @@ class WeatherViewController < UIViewController
     forecast_date_view.text = (Time.now + page.days).strftime '%a, %d.%m'
     forecast_date_view.backgroundColor = WEEKDAY_COLORS[(Time.now + page.days).strftime('%u').to_i-1].uicolor(0.8)
     if top
-      forecast_date_view.position = [forecast_date_view.position[0], 180]
+      forecast_date_view.position = [forecast_date_view.position[0], 170]
     end
     forecast_date_view
   end
