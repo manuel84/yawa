@@ -4,7 +4,7 @@ class WeatherViewController < UIViewController
   MAX_TEMP = 45
   MIN_TEMP = 0
   OFFSET_TEMP = 10
-  attr_accessor :data, :day, :image_views, :text_views, :animate
+  attr_accessor :data, :day, :image_views, :text_views, :animate, :number_of_pages
   stylesheet :weather_view
 
   def initWithDay(day=0, animate=true)
@@ -14,18 +14,81 @@ class WeatherViewController < UIViewController
     self
   end
 
-  def show_info
-    #@info_controller = InfoViewController.alloc.init
-    #info_controller.navigationItem.backBarButtonItem = UIBarButtonItem.alloc.initWithTitle("title", style: UIBarButtonItemStyleBordered, target: nil, action: nil)
-    #info_controller.navigationItem.leftBarButtonItem.title = "xyz"
-    self.navigationController.pushViewController(InfoViewController.alloc.init, animated: true)
-    #NSLog info_controller.navigationItem.backBarButtonItem # why nil???
-  end
-
-  def layoutDidLoad
+  def viewDidLoad
     super
 
+    init_navigation_bar
 
+    @number_of_pages = 7
+
+    init_scroll_view
+
+    @text_views = []
+
+    @data ||= []
+    offset = 0
+    Location.all do |response|
+      @data = response
+      if @data
+        landscape_images = @data['photos'].select { |image| image['width'].to_i > image['height'].to_i }
+        portrait_images = @data['photos'].select { |image| image['width'].to_i <= image['height'].to_i }
+        #background image
+        @number_of_pages.times do |i|
+          if i % 2 == 0 #even
+            BW::HTTP.get(landscape_images[i % landscape_images.size]['photo_url']) do |response|
+              if response.ok?
+                add_image(response.body, i, 0)
+              else
+                puts 'BAD RESPONSE'
+              end
+            end
+            BW::HTTP.get(landscape_images[i+1 % landscape_images.size]['photo_url']) do |response|
+              if response.ok?
+                add_image(response.body, i, 1)
+              else
+                puts 'BAD RESPONSE'
+              end
+            end
+          else # odd
+            BW::HTTP.get(portrait_images[i % portrait_images.size]['photo_url']) do |response|
+              if response.ok?
+                add_image(response.body, i)
+              else
+                puts 'BAD RESPONSE'
+              end
+            end
+          end
+        end
+
+
+      end
+
+
+    end
+
+    @pageControl = UIPageControl.alloc.init
+    @pageControl.frame = CGRectMake(0, 0, App.window.frame.size.width, 80)
+    @pageControl.numberOfPages = @number_of_pages
+    @pageControl.currentPage = 0
+
+    self.view.addSubview @pageControl
+    @animate ? animate_views : show_views
+    @pageControl.addTarget(self, action: "clickPageControl:", forControlEvents: UIControlEventAllEvents)
+  end
+
+  def scrollViewDidScroll(scrollView)
+    @pageControl.currentPage = @scrollView.contentOffset.x / @scrollView.frame.size.width
+  end
+
+
+  def clickPageControl(sender)
+    frame = @scrollView.frame
+    frame.origin.x = frame.size.width * @pageControl.currentPage
+
+    @scrollView.scrollRectToVisible(frame, animated: true)
+  end
+
+  def init_navigation_bar
     self.title = 'Yet Another Weather App'
     right_info_image = UIBarButtonItem.alloc.initWithImage(
         'navbar_info_iphone@2x.png'.uiimage.scale_to([20, 20]),
@@ -35,109 +98,129 @@ class WeatherViewController < UIViewController
 
     self.navigationItem.rightBarButtonItem = right_info_image
     self.navigationItem.setHidesBackButton true
-    self.view = UIScrollView.new
+  end
 
-    handler = lambda do |rec|
-      case rec.direction
-        when UISwipeGestureRecognizerDirectionLeft
-          if @day < 7
-            self.navigationController.pushViewController(self.class.alloc.initWithDay(@day+1, false), animated: true)
-          end
-        when UISwipeGestureRecognizerDirectionRight
-          if @day >= 1
-            self.navigationController.popViewControllerAnimated animated: false
-          end
-        # do if swiped from left to right
+  def init_scroll_view
+    @scrollView = UIScrollView.alloc.init
+    @scrollView.frame = CGRectMake(0, 0, App.window.frame.size.width, App.window.size.height)
+
+    @scrollView.pagingEnabled = true
+    @scrollView.backgroundColor = UIColor.blackColor
+
+    @scrollView.contentSize = CGSizeMake(@scrollView.frame.size.width * @number_of_pages, App.window.size.height)
+
+    @scrollView.showsHorizontalScrollIndicator = false
+    @scrollView.showsVerticalScrollIndicator = false
+
+    @scrollView.delegate = self
+    self.view.addSubview @scrollView
+    @scrollView
+  end
+
+  def add_image(data, page, top_offset_nr=nil, height=App.window.size.height/2)
+    width = @scrollView.frame.size.width
+    single = false
+    if top_offset_nr.nil? # do fullscreen
+      top_offset_nr = 0
+      height = App.window.size.height
+      single = true
+    end
+    image = UIImage.alloc.initWithData(data)
+    view = UIView.alloc.initWithFrame(CGRectMake(width * page, top_offset_nr*height, width, height))
+    image.scale_to_fill([width, height], position: :center)
+    view.backgroundColor = UIColor.alloc.initWithPatternImage(image)
+    @scrollView.addSubview(view)
+    view
+
+    if single || top_offset_nr == 0
+      title_view = view.subview UILabel, :title_view
+      title_view.text = @data['name']
+      init_style title_view
+      @text_views << title_view
+
+      @text_views << forecast_temp_view(view)
+      if single
+        @text_views << forecast_title_view(view, page)
+        @text_views << forecast_date_view(view, page)
+      end
+    elsif !single && top_offset_nr == 1
+      @text_views << forecast_title_view(view, page, true)
+      @text_views << forecast_date_view(view, page, true)
+    end
+    view
+  end
+
+  def forecast_temp_view(view)
+    forecast_temp_view = view.subview UILabel, :forecast_temp_view
+    init_style forecast_temp_view
+
+    temperature = @data['weather_forecasts'][@day]['temp']['amount'].to_i
+    forecast_temp_view.text = temperature.to_s + ' °C'
+
+    threshold = 100
+    hex_val = (([MIN_TEMP, [(temperature+OFFSET_TEMP), MAX_TEMP].min].max)*255/MAX_TEMP).to_s(16)
+    green = hex_val.hex < threshold ? hex_val : (255 - hex_val.hex).to_s(16)
+    other = hex_val.hex < threshold ? ([100, [80, green.hex].min].max).to_s(16) : ([0, [80, green.hex].min].max).to_s(16)
+    green = '0'+green if green.length <= 1 # normalize '3' => '03'
+    other = '0'+other if other.length <= 1 # normalize '3' => '03'
+    red = hex_val.hex < threshold ? other : 'ff'
+    blue = hex_val.hex < threshold ? 'ff' : other #(255 - hex_val.hex).to_s(16)
+    forecast_temp_view.backgroundColor = "##{red}#{green}#{blue}".uicolor(0.8)
+    forecast_temp_view
+  end
+
+  def forecast_title_view(view, page, top=false)
+    forecast_title_view = view.subview UIImageView, :forecast_title_view
+    init_style forecast_title_view
+
+    BW::HTTP.get(@data['weather_forecasts'][page]['img_url']) do |response|
+      if response.ok?
+        image = UIImage.alloc.initWithData(response.body)
+        forecast_title_view.image = image
+      else
+        puts 'BAD RESPONSE'
       end
     end
+    if top
+      #NSLog forecast_title_view.position
+    end
+    forecast_title_view
+  end
 
-    self.view.when_swiped(&handler).direction = UISwipeGestureRecognizerDirectionLeft
-    self.view.when_swiped(&handler).direction = UISwipeGestureRecognizerDirectionRight
-    @image_views = {}
-    @text_views = {}
-    layout(self.view, :root) do
-      @image_views[0] = subview UIImageView, :image_view1
-      @image_views[1] = subview UIImageView, :image_view2
-      @image_views[2] = subview UIImageView, :image_view3
-      @image_views[3] = subview UIImageView, :image_view4
-      @image_views.values.each { |text_view| text_view.fade_out }
-
-      @text_views[:title] = subview UILabel, :title_view
-      @text_views[:forecast_temp] = subview UILabel, :forecast_temp_view
-      @text_views[:forecast_title] = subview UIImageView, :forecast_title_view
-      @text_views[:forecast_date_view] = subview UILabel, :forecast_date_view
-
-      @text_views.values.each do |text_view|
-        text_view.layer.masksToBounds = true
-        text_view.layer.cornerRadius = 6
-        text_view.fade_out
-      end
+  def forecast_date_view(view, page, top=false)
+    forecast_date_view = view.subview UILabel, :forecast_date_view
+    init_style forecast_date_view
+    forecast_date_view.text = (Time.now + page.days).strftime '%a, %d.%m'
+    forecast_date_view.backgroundColor = WEEKDAY_COLORS[(Time.now + page.days).strftime('%u').to_i-1].uicolor(0.8)
+    if top
 
     end
-    @text_views[:forecast_date_view].text = (Time.now + @day.days).strftime '%a, %d.%m'
+    forecast_date_view
+  end
 
-    if @animate
-      @indicator = UIActivityIndicatorView.large
-      @indicator.frame = [[150, 200], [20, 20]]
-      view.addSubview(@indicator)
-      @indicator.hidesWhenStopped = true
-      @indicator.startAnimating
-    end
-
-    @data ||= []
-    Location.all do |response|
-      @data = response
-      @indicator.stopAnimating if @animate
-      if @data
-        @text_views[:title].text = @data['name']
-        temperature = @data['weather_forecasts'][@day]['temp']['amount'].to_i
-        @text_views[:forecast_temp].text = temperature.to_s + ' °C'
-        threshold = 100
-        hex_val = (([MIN_TEMP, [(temperature+OFFSET_TEMP), MAX_TEMP].min].max)*255/MAX_TEMP).to_s(16)
-        green = hex_val.hex < threshold ? hex_val : (255 - hex_val.hex).to_s(16)
-        other = hex_val.hex < threshold ? ([100, [80, green.hex].min].max).to_s(16) : ([0, [80, green.hex].min].max).to_s(16)
-        green = '0'+green if green.length <= 1 # normalize '3' => '03'
-        other = '0'+other if other.length <= 1 # normalize '3' => '03'
-        red = hex_val.hex < threshold ? other : 'ff'
-        blue = hex_val.hex < threshold ? 'ff' : other #(255 - hex_val.hex).to_s(16)
-        @text_views[:forecast_temp].backgroundColor = "##{red}#{green}#{blue}".uicolor(0.8)
-        #@text_views[:forecast_title].text = @data['weather_forecasts'][@day]['title']
-        NSLog @data['weather_forecasts'][@day]['img_url']
-        BW::HTTP.get(@data['weather_forecasts'][@day]['img_url']) do |response|
-          if response.ok?
-            im = UIImage.alloc.initWithData(response.body)
-            @text_views[:forecast_title].image = im #.scale_to([image_view.height, 120])
-          else
-            puts 'BAD RESPONSE'
-          end
-        end
-
-        photos = @data['photos']
-        @image_views.values.each_with_index do |image_view, i|
-          BW::HTTP.get(photos[i]['photo_url']) do |response|
-            if response.ok?
-              im = UIImage.alloc.initWithData(response.body)
-              image_view.image = im #.scale_to([image_view.height, 120])
-            else
-              puts 'BAD RESPONSE'
-            end
-          end
-        end
-      end
-      @animate ? animate_views : show_views
-      @text_views[:forecast_date_view].backgroundColor = WEEKDAY_COLORS[(Time.now + @day.days).strftime('%u').to_i-1].uicolor(0.8)
-    end
+  def init_style(view)
+    view.layer.masksToBounds = true
+    view.layer.cornerRadius = 6
+    view.fade_out
   end
 
   def animate_views
-    @image_views.values.each { |text_view| text_view.fade_in(duration: 3.0) }
-    @text_views.values.each { |text_view| text_view.fade_in(duration: 3.0) }
+    #@image_views.values.each { |text_view| text_view.fade_in(duration: 3.0) }
+    @text_views.each { |text_view| text_view.fade_in(duration: 3.0) }
 
   end
 
   def show_views
-    @image_views.values.each { |text_view| text_view.fade_in(duration: 0.0) }
-    @text_views.values.each { |text_view| text_view.fade_in(duration: 0.0) }
+    #@image_views.values.each { |text_view| text_view.fade_in(duration: 0.0) }
+    @text_views.each { |text_view| text_view.fade_in(duration: 0.0) }
+  end
+
+  def show_info
+    #@info_controller = InfoViewController.alloc.init
+    #info_controller.navigationItem.backBarButtonItem = UIBarButtonItem.alloc.initWithTitle("title", style: UIBarButtonItemStyleBordered, target: nil, action: nil)
+    #info_controller.navigationItem.leftBarButtonItem.title = "xyz"
+    self.navigationController.pushViewController(InfoViewController.alloc.init, animated: true)
+    #NSLog info_controller.navigationItem.backBarButtonItem # why nil???
   end
 
 end

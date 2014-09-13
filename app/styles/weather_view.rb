@@ -11,7 +11,7 @@ Teacup::Stylesheet.new :weather_view do
   style :image_view4,
         frame: [[0, 540], [320, 180]]
 
-  @background_color = UIColor.colorWithRed(0/255.0, green:0/255.0, blue:0/255.0, alpha: 0.6)
+  @background_color = '#000000'.uicolor(0.38)
 
   style :text_view,
         textAlignment: UITextAlignmentCenter,
@@ -20,7 +20,7 @@ Teacup::Stylesheet.new :weather_view do
         backgroundColor: @background_color
 
   style :title_view, extends: :text_view,
-        top: 60, left: 30,
+        top: 80, left: 30,
         width: 260, height: 50
 
   style :forecast_temp_view, extends: :text_view,
