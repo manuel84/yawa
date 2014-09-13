@@ -16,6 +16,7 @@ class WeatherViewController < UIViewController
 
   def viewDidLoad
     super
+    NSLog "didLoad"
 
     init_navigation_bar
 
@@ -23,10 +24,9 @@ class WeatherViewController < UIViewController
 
     init_scroll_view
 
-    @text_views = []
+    @text_views ||= []
 
     @data ||= []
-    offset = 0
     Location.all do |response|
       @data = response
       if @data
@@ -41,6 +41,7 @@ class WeatherViewController < UIViewController
               else
                 puts 'BAD RESPONSE'
               end
+              @animate ? animate_views : show_views
             end
             BW::HTTP.get(landscape_images[i+1 % landscape_images.size]['photo_url']) do |response|
               if response.ok?
@@ -48,6 +49,7 @@ class WeatherViewController < UIViewController
               else
                 puts 'BAD RESPONSE'
               end
+              @animate ? animate_views : show_views
             end
           else # odd
             BW::HTTP.get(portrait_images[i % portrait_images.size]['photo_url']) do |response|
@@ -56,6 +58,7 @@ class WeatherViewController < UIViewController
               else
                 puts 'BAD RESPONSE'
               end
+              @animate ? animate_views : show_views
             end
           end
         end
@@ -67,13 +70,17 @@ class WeatherViewController < UIViewController
     end
 
     @pageControl = UIPageControl.alloc.init
-    @pageControl.frame = CGRectMake(0, 0, App.window.frame.size.width, 80)
+    @pageControl.frame = CGRectMake(0, 0, App.window.frame.size.width, 0)
     @pageControl.numberOfPages = @number_of_pages
     @pageControl.currentPage = 0
 
     self.view.addSubview @pageControl
-    @animate ? animate_views : show_views
+    self.view.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action: 'toggle_views'))
     @pageControl.addTarget(self, action: "clickPageControl:", forControlEvents: UIControlEventAllEvents)
+  end
+
+  def toggle_views
+    @text_views.first.alpha <= 0.0 ? animate_views(1.0) : hide_views(1.0)
   end
 
   def scrollViewDidScroll(scrollView)
@@ -102,7 +109,7 @@ class WeatherViewController < UIViewController
 
   def init_scroll_view
     @scrollView = UIScrollView.alloc.init
-    @scrollView.frame = CGRectMake(0, 0, App.window.frame.size.width, App.window.size.height)
+    @scrollView.frame = CGRectMake(0, 0, App.window.size.width, App.window.size.height)
 
     @scrollView.pagingEnabled = true
     @scrollView.backgroundColor = UIColor.blackColor
@@ -130,7 +137,6 @@ class WeatherViewController < UIViewController
     image.scale_to_fill([width, height], position: :center)
     view.backgroundColor = UIColor.alloc.initWithPatternImage(image)
     @scrollView.addSubview(view)
-    view
 
     if single || top_offset_nr == 0
       title_view = view.subview UILabel, :title_view
@@ -182,6 +188,7 @@ class WeatherViewController < UIViewController
       end
     end
     if top
+      forecast_title_view.position = [forecast_title_view.position[0], 80]
       #NSLog forecast_title_view.position
     end
     forecast_title_view
@@ -193,7 +200,7 @@ class WeatherViewController < UIViewController
     forecast_date_view.text = (Time.now + page.days).strftime '%a, %d.%m'
     forecast_date_view.backgroundColor = WEEKDAY_COLORS[(Time.now + page.days).strftime('%u').to_i-1].uicolor(0.8)
     if top
-
+      forecast_date_view.position = [forecast_date_view.position[0], 180]
     end
     forecast_date_view
   end
@@ -204,9 +211,9 @@ class WeatherViewController < UIViewController
     view.fade_out
   end
 
-  def animate_views
+  def animate_views(sec=3.0)
     #@image_views.values.each { |text_view| text_view.fade_in(duration: 3.0) }
-    @text_views.each { |text_view| text_view.fade_in(duration: 3.0) }
+    @text_views.each { |text_view| text_view.fade_in(duration: sec) }
 
   end
 
@@ -221,6 +228,10 @@ class WeatherViewController < UIViewController
     #info_controller.navigationItem.leftBarButtonItem.title = "xyz"
     self.navigationController.pushViewController(InfoViewController.alloc.init, animated: true)
     #NSLog info_controller.navigationItem.backBarButtonItem # why nil???
+  end
+
+  def hide_views(sec=3.0)
+    @text_views.each { |text_view| text_view.fade_out(duration: sec) }
   end
 
 end
