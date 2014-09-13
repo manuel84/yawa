@@ -36,18 +36,23 @@ class WeatherViewController < UIViewController
     self.navigationItem.rightBarButtonItem = right_info_image
     self.navigationItem.setHidesBackButton true
     self.view = UIScrollView.new
-    self.view.when_swiped do
-      if @day < 7
-        self.navigationController.pushViewController(self.class.alloc.initWithDay(@day+1, false), animated: true)
-      end
-    end.direction = UISwipeGestureRecognizerDirectionLeft
 
-    self.view.when_swiped do
-      if @day >= 1
-        self.navigationController.popViewControllerAnimated animated: false
+    handler = lambda do |rec|
+      case rec.direction
+        when UISwipeGestureRecognizerDirectionLeft
+          if @day < 7
+            self.navigationController.pushViewController(self.class.alloc.initWithDay(@day+1, false), animated: true)
+          end
+        when UISwipeGestureRecognizerDirectionRight
+          if @day >= 1
+            self.navigationController.popViewControllerAnimated animated: false
+          end
+        # do if swiped from left to right
       end
-      # do if swiped from left to right
-    end.direction = UISwipeGestureRecognizerDirectionRight
+    end
+
+    self.view.when_swiped(&handler).direction = UISwipeGestureRecognizerDirectionLeft
+    self.view.when_swiped(&handler).direction = UISwipeGestureRecognizerDirectionRight
     @image_views = {}
     @text_views = {}
     layout(self.view, :root) do
@@ -59,7 +64,7 @@ class WeatherViewController < UIViewController
 
       @text_views[:title] = subview UILabel, :title_view
       @text_views[:forecast_temp] = subview UILabel, :forecast_temp_view
-      @text_views[:forecast_title] = subview UILabel, :forecast_title_view
+      @text_views[:forecast_title] = subview UIImageView, :forecast_title_view
       @text_views[:forecast_date_view] = subview UILabel, :forecast_date_view
 
       @text_views.values.each do |text_view|
@@ -96,7 +101,16 @@ class WeatherViewController < UIViewController
         red = hex_val.hex < threshold ? other : 'ff'
         blue = hex_val.hex < threshold ? 'ff' : other #(255 - hex_val.hex).to_s(16)
         @text_views[:forecast_temp].backgroundColor = "##{red}#{green}#{blue}".uicolor(0.8)
-        @text_views[:forecast_title].text = @data['weather_forecasts'][@day]['title']
+        #@text_views[:forecast_title].text = @data['weather_forecasts'][@day]['title']
+        NSLog @data['weather_forecasts'][@day]['img_url']
+        BW::HTTP.get(@data['weather_forecasts'][@day]['img_url']) do |response|
+          if response.ok?
+            im = UIImage.alloc.initWithData(response.body)
+            @text_views[:forecast_title].image = im #.scale_to([image_view.height, 120])
+          else
+            puts 'BAD RESPONSE'
+          end
+        end
 
         photos = @data['photos']
         @image_views.values.each_with_index do |image_view, i|

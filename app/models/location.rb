@@ -14,6 +14,7 @@ class Location
           NSLog 'use cache'
           callback.call(result)
         else
+          NSLog "get #{url}"
           AFMotion::SessionClient.shared.get(url) do |result|
             Cache.write Time.now.strftime('%y%m%d')+url, result.object
             if result.success?
