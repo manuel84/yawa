@@ -26,7 +26,7 @@ Motion::Project::App.setup do |app|
   app.deployment_target = '7.0'
   app.device_family = [:iphone]
   app.interface_orientations = [:portrait]
-  app.frameworks += %w(AVFoundation AudioToolbox QuartzCore CoreLocation CoreBluetooth)
+  app.frameworks += %w(AVFoundation AudioToolbox QuartzCore CoreLocation CoreBluetooth CoreData AdSupport CoreTelephony MessageUI StoreKit)
 
   app.development do
     app.codesign_certificate = APP_CONFIG['development']['codesign_certificate']
@@ -40,5 +40,7 @@ Motion::Project::App.setup do |app|
   app.pods do
     pod 'Reachability'
   end
-  app.vendor_project('vendor/GoogleAdMobAdsSDK', :static)
+  app.vendor_project('vendor/GoogleMobileAdsSdk', :static)
+  app.libs << "/usr/lib/libz.dylib"
+    app.libs << "/usr/lib/libxml2.2.dylib"
 end

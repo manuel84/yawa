@@ -251,13 +251,10 @@ class WeatherViewController < UIViewController
   def init_admob
     @banner_view = GADBannerView.alloc.initWithAdSize(KGADAdSizeBanner)
     # Your Admob Publisher ID
-    @banner_view.adUnitID = "pub-0862576433186381"
+    @banner_view.adUnitID = 'ca-app-pub-0862576433186381/8228071996' #"pub-0862576433186381"
     @banner_view.rootViewController = self
 
-    @banner_view.frame = [
-        [0, -50],
-        [320, 50]
-    ]
+    @banner_view.position = [160, 88]
 
     self.view.addSubview(@banner_view)
 

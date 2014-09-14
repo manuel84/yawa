@@ -4,7 +4,8 @@ development:
   entitlements:
     aps-environment: 'development'
   info_plist:
-    host: "https://eloboter-api.herokuapp.com"
+    host: "https://yawa-api.herokuapp.com"
+    admob: "ca-app-pub-0862576433186381/8228071996"
     UIBackgroundModes:
       - fetch
       - location
@@ -15,7 +16,8 @@ release:
   entitlements:
     aps-environment: 'production'
   info_plist:
-    host: "https://eloboter-api.herokuapp.com"
+    host: "https://yawa-api.herokuapp.com"
+    admob: "ca-app-pub-0862576433186381/8228071996"
     UIBackgroundModes:
       - fetch
       - location
