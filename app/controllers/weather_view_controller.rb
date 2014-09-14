@@ -21,12 +21,21 @@ class WeatherViewController < UIViewController
     @number_of_pages = 7
 
     init_scroll_view
+    if @animate
+      @indicator = UIActivityIndicatorView.large
+      @indicator.frame = [[150, 200], [20, 20]]
+      @scrollView.addSubview(@indicator)
+      @indicator.hidesWhenStopped = true
+      @indicator.startAnimating
+    end
 
     @text_views ||= []
+    @image_views ||= []
 
     @data ||= []
     Location.all do |response|
       @data = response
+      @indicator.stopAnimating if @animate
       if @data
         landscape_images = @data['photos'].select { |image| image['width'].to_i > image['height'].to_i }
         portrait_images = @data['photos'].select { |image| image['width'].to_i <= image['height'].to_i }
@@ -132,11 +141,12 @@ class WeatherViewController < UIViewController
     end
     image = UIImage.alloc.initWithData(data)
     image.scale_to_fill([width, height], position: :center)
-    view = UIImageView.alloc.initWithFrame(CGRectMake(width * page, [0,top_offset_nr*height].max, width, height))
+    view = UIImageView.alloc.initWithFrame(CGRectMake(width * page, [0, top_offset_nr*height].max, width, height))
 
     view.image = image
     @scrollView.addSubview(view)
-    #@scrollView.bringSubviewToFront view if top_offset_nr != 0
+    view.fade_out
+    @image_views << view
 
     if single || top_offset_nr == 0
       title_view = view.subview UILabel, :title_view
@@ -213,7 +223,7 @@ class WeatherViewController < UIViewController
   end
 
   def animate_views(sec=3.0)
-    #@image_views.values.each { |text_view| text_view.fade_in(duration: 3.0) }
+    @image_views.each { |image_view| image_view.fade_in(duration: sec) }
     @text_views.each { |text_view| text_view.fade_in(duration: sec) }
 
   end

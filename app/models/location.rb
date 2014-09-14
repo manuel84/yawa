@@ -20,7 +20,8 @@ class Location
             if result.success?
               callback.call(result.object)
             else
-              callback.call(false, result.error)
+              App.alert('No Internet')
+              #callback.call(false, result.error)
             end
           end
         end

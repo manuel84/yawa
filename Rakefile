@@ -37,4 +37,7 @@ Motion::Project::App.setup do |app|
   end
   #app.files_dependencies 'app/app_delegate.rb' => 'app/styles/matchday_table_view.rb'
   app.fonts = ['Arvo-Regular.ttf']
+  app.pods do
+    pod 'Reachability'
+  end
 end

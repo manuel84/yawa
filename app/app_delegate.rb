@@ -20,18 +20,45 @@ class AppDelegate
     application.setStatusBarStyle(UIStatusBarStyleDefault)
     #UIStatusBarStyleBlackTranslucent)
 
-    if ipad?
-      @main_controller = WeatherViewIpadController.alloc.initWithAnimation
-    else
-      @main_controller = WeatherViewIphoneController.alloc.initWithAnimation
-    end
-    @window.rootViewController = UINavigationController.alloc.initWithRootViewController(@main_controller)
+    start_ui_controller
+
+
     true
+  end
+
+
+  def start_ui_controller
+    if internet_connected?
+      if ipad?
+        @main_controller = WeatherViewIpadController.alloc.initWithAnimation
+      else
+        @main_controller = WeatherViewIphoneController.alloc.initWithAnimation
+      end
+      @window.rootViewController = UINavigationController.alloc.initWithRootViewController(@main_controller)
+    else
+      BW::UIAlertView.new(
+          {
+              title: 'Keine Internetverbindung',
+              message: 'YAWA setzt eine Internetverbindung voraus. Stelle bitte sicher, dass eine Verbidnung zum Internet besteht.',
+              buttons: ['YAWA schließen', 'wiederholen'],
+              cancel_button_index: 0,
+          }) do |alert|
+        if alert.clicked_button.cancel?
+          exit(0)
+        else
+          start_ui_controller
+        end
+      end.show
+    end
   end
 
 end
 
 class Kernel
+
+  def internet_connected?
+    Reachability.reachabilityForInternetConnection.isReachable
+  end
 
   def ipad?
     UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad
