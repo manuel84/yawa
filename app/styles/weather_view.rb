@@ -20,21 +20,21 @@ Teacup::Stylesheet.new :weather_view do
         backgroundColor: @background_color
 
   style :title_view, extends: :text_view,
-        top: 80, left: 30,
+        top: 66, left: 30,
         width: 260, height: 50
 
   style :forecast_temp_view, extends: :text_view,
-        top: 205, left: 60,
+        top: 170, left: 60,
         width: 200, height: 80,
         textColor: UIColor.darkGrayColor,
         font: UIFont.fontWithName('Arvo', size: 80)
 
   style :forecast_title_view,#, extends: :text_view,
-        top: 210, left: 10,
+        top: 160, left: 10,
         width: 300, height: 300
 
   style :forecast_date_view, extends: :text_view,
-        top: 430, left: 60,
+        top: 380, left: 60,
         width: 200, height: 50
 
 
