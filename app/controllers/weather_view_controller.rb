@@ -21,6 +21,9 @@ class WeatherViewController < UIViewController
     @number_of_pages = 7
 
     init_scroll_view
+
+    init_admob
+
     if @animate
       @indicator = UIActivityIndicatorView.large
       @indicator.frame = [[150, 200], [20, 20]]
@@ -243,6 +246,22 @@ class WeatherViewController < UIViewController
 
   def hide_views(sec=3.0)
     @text_views.each { |text_view| text_view.fade_out(duration: sec) }
+  end
+
+  def init_admob
+    @banner_view = GADBannerView.alloc.initWithAdSize(KGADAdSizeBanner)
+    # Your Admob Publisher ID
+    @banner_view.adUnitID = "pub-0862576433186381"
+    @banner_view.rootViewController = self
+
+    @banner_view.frame = [
+        [0, -50],
+        [320, 50]
+    ]
+
+    self.view.addSubview(@banner_view)
+
+    @banner_view.loadRequest(GADRequest.request)
   end
 
 end

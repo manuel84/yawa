@@ -40,4 +40,5 @@ Motion::Project::App.setup do |app|
   app.pods do
     pod 'Reachability'
   end
+  app.vendor_project('vendor/GoogleAdMobAdsSDK', :static)
 end
