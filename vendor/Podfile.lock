@@ -17,11 +17,14 @@ PODS:
   - AFNetworking/Serialization (2.1.0)
   - AFNetworking/UIKit (2.1.0):
     - AFNetworking/NSURLConnection
+  - Reachability (3.1.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.1.0)
+  - Reachability
 
 SPEC CHECKSUMS:
-  AFNetworking: c7d7901a83f631414c7eda1737261f696101a5cd
+  AFNetworking: 7c33510b46f994bc75b75c6e63c1d83414ca40f2
+  Reachability: 8e9635e3cb4f98e7f825e51147f677ecc694d0e7
 
 COCOAPODS: 0.32.1
