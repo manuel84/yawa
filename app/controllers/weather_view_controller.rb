@@ -4,7 +4,7 @@ class WeatherViewController < UIViewController
   MAX_TEMP = 45
   MIN_TEMP = 0
   OFFSET_TEMP = 10
-  attr_accessor :data, :day, :image_views, :text_views, :animate, :number_of_pages, :offset_top
+  attr_accessor :data, :day, :image_views, :text_views, :animate, :number_of_pages, :location_name_view, :forecast_image_view, :forecast_temp_view, :date_view
   stylesheet :weather_view
 
   def initWithAnimation(animate=true)
@@ -42,6 +42,22 @@ class WeatherViewController < UIViewController
       if @data
         landscape_images = @data['photos'].select { |image| image['width'].to_i > image['height'].to_i }
         portrait_images = @data['photos'].select { |image| image['width'].to_i <= image['height'].to_i }
+
+
+        page = 0
+        @location_name_view = location_name_view(view)
+        #@text_views << @location_name_view
+
+        @forecast_temp_view = forecast_temp_view(view, page)
+        @text_views << @forecast_temp_view
+
+        @forecast_image_view = forecast_title_view(view, page)
+        @text_views << @forecast_image_view
+
+        @date_view = forecast_date_view(view, page)
+        @text_views << @date_view
+
+
         #background image
         @number_of_pages.times do |i|
           if i % 2 == 0 #even
@@ -52,6 +68,7 @@ class WeatherViewController < UIViewController
                 puts 'BAD RESPONSE'
               end
               @animate ? animate_views : show_views
+              @location_name_view.fade_in(3.0)
             end
             BW::HTTP.get(landscape_images[i+1 % landscape_images.size]['photo_url']) do |response|
               if response.ok?
@@ -60,6 +77,7 @@ class WeatherViewController < UIViewController
                 puts 'BAD RESPONSE'
               end
               @animate ? animate_views : show_views
+              @location_name_view.fade_in(3.0)
             end
           else # odd
             BW::HTTP.get(portrait_images[i % portrait_images.size]['photo_url']) do |response|
@@ -69,10 +87,10 @@ class WeatherViewController < UIViewController
                 puts 'BAD RESPONSE'
               end
               @animate ? animate_views : show_views
+              @location_name_view.fade_in(3.0)
             end
           end
         end
-
 
       end
 
@@ -94,7 +112,36 @@ class WeatherViewController < UIViewController
   end
 
   def scrollViewDidScroll(scrollView)
-    @pageControl.currentPage = @scrollView.contentOffset.x / @scrollView.frame.size.width
+    new_currentPage = @scrollView.contentOffset.x / @scrollView.frame.size.width
+    NSLog (@scrollView.contentOffset.x / @scrollView.frame.size.width).to_s
+    NSLog @pageControl.currentPage.to_s
+    NSLog new_currentPage.to_s
+    if new_currentPage.to_i != @pageControl.currentPage.to_i
+      @pageControl.currentPage = new_currentPage.to_i
+
+
+      @date_view.text = (Time.now + @pageControl.currentPage.days).strftime '%a, %d.%m'
+      @date_view.backgroundColor = WEEKDAY_COLORS[(Time.now + @pageControl.currentPage.days).strftime('%u').to_i-1].uicolor(0.8)
+
+      BW::HTTP.get(@data['weather_forecasts'][@pageControl.currentPage]['img_url']) do |response|
+        if response.ok?
+          image = UIImage.alloc.initWithData(response.body)
+          @forecast_image_view.image = image
+        else
+          puts 'BAD RESPONSE'
+        end
+      end
+
+      set_forecast_text @pageControl.currentPage
+      set_forecast_temp_view_color @pageControl.currentPage
+
+      @text_views.each { |text_view| text_view.layer.basic_animation('opacity', from: 0.2, to: 1, duration: 0.5) }
+
+
+    end
+
+
+    @pageControl.currentPage
   end
 
 
@@ -148,34 +195,36 @@ class WeatherViewController < UIViewController
 
     view.image = image
     @scrollView.addSubview(view)
+    @scrollView.sendSubviewToBack view
     view.fade_out
     @image_views << view
-
-    if single || top_offset_nr == 0
-      title_view = view.subview UILabel, :title_view
-      title_view.text = @data['name']
-      init_style title_view
-      @text_views << title_view
-
-      @text_views << forecast_temp_view(view, page)
-      if single
-        @text_views << forecast_title_view(view, page)
-        @text_views << forecast_date_view(view, page)
-      end
-    elsif !single && top_offset_nr == 1
-      @text_views << forecast_title_view(view, page, true)
-      @text_views << forecast_date_view(view, page, true)
-    end
     view
   end
 
+  def location_name_view(view)
+    @location_name_view = view.subview UILabel, :title_view
+    @location_name_view.text = @data['name']
+    init_style @location_name_view
+    @location_name_view
+  end
+
   def forecast_temp_view(view, page)
-    forecast_temp_view = view.subview UILabel, :forecast_temp_view
-    init_style forecast_temp_view
+    @forecast_temp_view = view.subview UILabel, :forecast_temp_view
+    init_style @forecast_temp_view
 
+    set_forecast_text page
+    set_forecast_temp_view_color page
+
+    @forecast_temp_view
+  end
+
+  def set_forecast_text(page)
     temperature = @data['weather_forecasts'][page]['temp']['amount'].to_i
-    forecast_temp_view.text = temperature.to_s + ' °C'
+    @forecast_temp_view.text = temperature.to_s + ' °C'
+  end
 
+  def set_forecast_temp_view_color(page)
+    temperature = @data['weather_forecasts'][page]['temp']['amount'].to_i
     threshold = 100
     hex_val = (([MIN_TEMP, [(temperature+OFFSET_TEMP), MAX_TEMP].min].max)*255/MAX_TEMP).to_s(16)
     green = hex_val.hex < threshold ? hex_val : (255 - hex_val.hex).to_s(16)
@@ -184,38 +233,30 @@ class WeatherViewController < UIViewController
     other = '0'+other if other.length <= 1 # normalize '3' => '03'
     red = hex_val.hex < threshold ? other : 'ff'
     blue = hex_val.hex < threshold ? 'ff' : other #(255 - hex_val.hex).to_s(16)
-    forecast_temp_view.backgroundColor = "##{red}#{green}#{blue}".uicolor(0.8)
-    forecast_temp_view
+    @forecast_temp_view.backgroundColor = "##{red}#{green}#{blue}".uicolor(0.8)
   end
 
-  def forecast_title_view(view, page, top=false)
-    forecast_title_view = view.subview UIImageView, :forecast_title_view
-    init_style forecast_title_view
+  def forecast_title_view(view, page)
+    forecast_image_view = view.subview UIImageView, :forecast_title_view
+    init_style forecast_image_view
 
     BW::HTTP.get(@data['weather_forecasts'][page]['img_url']) do |response|
       if response.ok?
         image = UIImage.alloc.initWithData(response.body)
-        forecast_title_view.image = image
+        forecast_image_view.image = image
       else
         puts 'BAD RESPONSE'
       end
     end
-    if top
-      forecast_title_view.position = [forecast_title_view.position[0], 56]
-      #NSLog forecast_title_view.position
-    end
-    view.bringSubviewToFront forecast_title_view
-    forecast_title_view
+    #view.bringSubviewToFront forecast_image_view
+    forecast_image_view
   end
 
-  def forecast_date_view(view, page, top=false)
+  def forecast_date_view(view, page)
     forecast_date_view = view.subview UILabel, :forecast_date_view
     init_style forecast_date_view
     forecast_date_view.text = (Time.now + page.days).strftime '%a, %d.%m'
     forecast_date_view.backgroundColor = WEEKDAY_COLORS[(Time.now + page.days).strftime('%u').to_i-1].uicolor(0.8)
-    if top
-      forecast_date_view.position = [forecast_date_view.position[0], 154]
-    end
     forecast_date_view
   end
 
@@ -223,6 +264,7 @@ class WeatherViewController < UIViewController
     view.layer.masksToBounds = true
     view.layer.cornerRadius = 6
     view.fade_out
+    @scrollView.bringSubviewToFront view
   end
 
   def animate_views(sec=3.0)
@@ -254,7 +296,7 @@ class WeatherViewController < UIViewController
     @banner_view.adUnitID = 'ca-app-pub-0862576433186381/6192935593' #"pub-0862576433186381"
     @banner_view.rootViewController = self
 
-    @banner_view.position = [160, 88]
+    @banner_view.position = [160, 546]
 
     self.view.addSubview(@banner_view)
 
