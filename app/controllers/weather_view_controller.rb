@@ -98,7 +98,7 @@ class WeatherViewController < UIViewController
     end
 
     @pageControl = UIPageControl.alloc.init
-    @pageControl.frame = CGRectMake(0, @scrollView.frame.size.height - 66, App.window.frame.size.width, 80)
+    @pageControl.frame = CGRectMake(0, @scrollView.frame.size.height - 130, App.window.frame.size.width, 80)
     @pageControl.numberOfPages = @number_of_pages
     @pageControl.currentPage = 0
 
