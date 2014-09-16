@@ -41,6 +41,6 @@ Motion::Project::App.setup do |app|
     pod 'Reachability'
   end
   app.vendor_project('vendor/GoogleMobileAdsSdk', :static)
-  app.libs << "/usr/lib/libz.dylib"
-    app.libs << "/usr/lib/libxml2.2.dylib"
+  app.libs << '/usr/lib/libz.dylib'
+  app.libs << '/usr/lib/libxml2.2.dylib'
 end

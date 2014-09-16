@@ -45,17 +45,13 @@ class WeatherViewController < UIViewController
 
 
         page = 0
-        @location_name_view = location_name_view(view)
-        #@text_views << @location_name_view
+        init_location_name_view
 
-        @forecast_temp_view = forecast_temp_view(view, page)
-        @text_views << @forecast_temp_view
+        init_forecast_temp_view(page)
 
-        @forecast_image_view = forecast_title_view(view, page)
-        @text_views << @forecast_image_view
+        init_forecast_image_view(page)
 
-        @date_view = forecast_date_view(view, page)
-        @text_views << @date_view
+        init_date_view(page)
 
 
         #background image
@@ -119,23 +115,16 @@ class WeatherViewController < UIViewController
     if new_currentPage.to_i != @pageControl.currentPage.to_i
       @pageControl.currentPage = new_currentPage.to_i
 
+      @text_views.reject { |view| view == @location_name_view }.each { |text_view| text_view.layer.basic_animation('opacity', from: 1, to: 0.6, duration: 0.3) }
 
-      @date_view.text = (Time.now + @pageControl.currentPage.days).strftime '%a, %d.%m'
-      @date_view.backgroundColor = WEEKDAY_COLORS[(Time.now + @pageControl.currentPage.days).strftime('%u').to_i-1].uicolor(0.8)
+      set_date_view_text @pageControl.currentPage
 
-      BW::HTTP.get(@data['weather_forecasts'][@pageControl.currentPage]['img_url']) do |response|
-        if response.ok?
-          image = UIImage.alloc.initWithData(response.body)
-          @forecast_image_view.image = image
-        else
-          puts 'BAD RESPONSE'
-        end
-      end
+      set_forecast_image @pageControl.currentPage
 
       set_forecast_text @pageControl.currentPage
       set_forecast_temp_view_color @pageControl.currentPage
 
-      @text_views.each { |text_view| text_view.layer.basic_animation('opacity', from: 0.2, to: 1, duration: 0.5) }
+      @text_views.reject { |view| view == @location_name_view }.each { |text_view| text_view.layer.basic_animation('opacity', from: 0.6, to: 1, duration: 0.3) }
 
 
     end
@@ -201,19 +190,22 @@ class WeatherViewController < UIViewController
     view
   end
 
-  def location_name_view(view)
-    @location_name_view = view.subview UILabel, :title_view
+  def init_location_name_view
+    @location_name_view = self.view.subview UILabel, :title_view
     @location_name_view.text = @data['name']
     init_style @location_name_view
+    @text_views << @location_name_view
     @location_name_view
   end
 
-  def forecast_temp_view(view, page)
-    @forecast_temp_view = view.subview UILabel, :forecast_temp_view
+  def init_forecast_temp_view(page)
+    @forecast_temp_view = self.view.subview UILabel, :forecast_temp_view
     init_style @forecast_temp_view
 
     set_forecast_text page
     set_forecast_temp_view_color page
+
+    @text_views << @forecast_temp_view
 
     @forecast_temp_view
   end
@@ -236,28 +228,37 @@ class WeatherViewController < UIViewController
     @forecast_temp_view.backgroundColor = "##{red}#{green}#{blue}".uicolor(0.8)
   end
 
-  def forecast_title_view(view, page)
-    forecast_image_view = view.subview UIImageView, :forecast_title_view
-    init_style forecast_image_view
+  def init_forecast_image_view(page)
+    @forecast_image_view = self.view.subview UIImageView, :forecast_title_view
+    init_style @forecast_image_view
 
+    set_forecast_image page
+    @text_views << @forecast_image_view
+    @forecast_image_view
+  end
+
+  def set_forecast_image(page)
     BW::HTTP.get(@data['weather_forecasts'][page]['img_url']) do |response|
       if response.ok?
         image = UIImage.alloc.initWithData(response.body)
-        forecast_image_view.image = image
+        @forecast_image_view.image = image
       else
         puts 'BAD RESPONSE'
       end
     end
-    #view.bringSubviewToFront forecast_image_view
-    forecast_image_view
   end
 
-  def forecast_date_view(view, page)
-    forecast_date_view = view.subview UILabel, :forecast_date_view
-    init_style forecast_date_view
-    forecast_date_view.text = (Time.now + page.days).strftime '%a, %d.%m'
-    forecast_date_view.backgroundColor = WEEKDAY_COLORS[(Time.now + page.days).strftime('%u').to_i-1].uicolor(0.8)
-    forecast_date_view
+  def init_date_view(page)
+    @date_view = self.view.subview UILabel, :forecast_date_view
+    init_style @date_view
+    set_date_view_text page
+    @text_views << @date_view
+    @date_view
+  end
+
+  def set_date_view_text(page)
+    @date_view.text = (Time.now + page.days).strftime '%a, %d.%m'
+    @date_view.backgroundColor = WEEKDAY_COLORS[(Time.now + page.days).strftime('%u').to_i-1].uicolor(0.8)
   end
 
   def init_style(view)
@@ -274,7 +275,7 @@ class WeatherViewController < UIViewController
   end
 
   def show_views
-    #@image_views.values.each { |text_view| text_view.fade_in(duration: 0.0) }
+    @image_views.each { |text_view| text_view.fade_in(duration: 0.0) }
     @text_views.each { |text_view| text_view.fade_in(duration: 0.0) }
   end
 
@@ -299,8 +300,9 @@ class WeatherViewController < UIViewController
     @banner_view.position = [160, 546]
 
     self.view.addSubview(@banner_view)
-
-    @banner_view.loadRequest(GADRequest.request)
+    request = GADRequest.request
+    request.testDevices = []
+    @banner_view.loadRequest(request)
   end
 
 end
