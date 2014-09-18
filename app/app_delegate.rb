@@ -2,7 +2,8 @@ class AppDelegate
 
   def application(application, didFinishLaunchingWithOptions: launchOptions)
     Teacup::Appearance.apply
-    AFMotion::SessionClient.build_shared("https://yawa-api.herokuapp.com") do
+    api_host = NSBundle.mainBundle.objectForInfoDictionaryKey('host')
+    AFMotion::SessionClient.build_shared(api_host) do
       session_configuration :default
       header "Accept", "application/json"
 

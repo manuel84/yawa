@@ -108,27 +108,26 @@ class WeatherViewController < UIViewController
   end
 
   def scrollViewDidScroll(scrollView)
-    new_currentPage = @scrollView.contentOffset.x / @scrollView.frame.size.width
-    NSLog (@scrollView.contentOffset.x / @scrollView.frame.size.width).to_s
-    NSLog @pageControl.currentPage.to_s
-    NSLog new_currentPage.to_s
-    if new_currentPage.to_i != @pageControl.currentPage.to_i
-      @pageControl.currentPage = new_currentPage.to_i
+    newCurrentPage = (@scrollView.contentOffset.x / @scrollView.frame.size.width).to_i
+    if newCurrentPage != @pageControl.currentPage
+      @pageControl.currentPage = newCurrentPage
 
-      @text_views.reject { |view| view == @location_name_view }.each { |text_view| text_view.layer.basic_animation('opacity', from: 1, to: 0.6, duration: 0.3) }
 
-      set_date_view_text @pageControl.currentPage
+      UIView.animation_chain do
+        @text_views.reject { |view| view == @location_name_view }.each { |text_view| text_view.layer.basic_animation('opacity', from: 1, to: 0.8, duration: 0.3) }
+      end.and_then do
+        set_date_view_text @pageControl.currentPage
 
-      set_forecast_image @pageControl.currentPage
+        set_forecast_image @pageControl.currentPage
 
-      set_forecast_text @pageControl.currentPage
-      set_forecast_temp_view_color @pageControl.currentPage
-
-      @text_views.reject { |view| view == @location_name_view }.each { |text_view| text_view.layer.basic_animation('opacity', from: 0.6, to: 1, duration: 0.3) }
+        set_forecast_text @pageControl.currentPage
+        set_forecast_temp_view_color @pageControl.currentPage
+      end.and_then do
+        @text_views.reject { |view| view == @location_name_view }.each { |text_view| text_view.layer.basic_animation('opacity', from: 0.4, to: 1, duration: 0.3) }
+      end.start
 
 
     end
-
 
     @pageControl.currentPage
   end
@@ -294,14 +293,14 @@ class WeatherViewController < UIViewController
   def init_admob
     @banner_view = GADBannerView.alloc.initWithAdSize(KGADAdSizeBanner)
     # Your Admob Publisher ID
-    @banner_view.adUnitID = 'ca-app-pub-0862576433186381/6192935593' #"pub-0862576433186381"
+    @banner_view.adUnitID = NSBundle.mainBundle.objectForInfoDictionaryKey('admob')
     @banner_view.rootViewController = self
 
-    @banner_view.position = [160, 546]
+    @banner_view.position = [160, 542]
 
     self.view.addSubview(@banner_view)
     request = GADRequest.request
-    request.testDevices = []
+    request.testDevices = [GAD_SIMULATOR_ID]
     @banner_view.loadRequest(request)
   end
 
