@@ -112,9 +112,11 @@ class WeatherViewController < UIViewController
     if newCurrentPage != @pageControl.currentPage
       @pageControl.currentPage = newCurrentPage
 
-
+      views_to_animate = @text_views.reject { |view| view == @location_name_view }
       UIView.animation_chain do
-        @text_views.reject { |view| view == @location_name_view }.each { |text_view| text_view.layer.basic_animation('opacity', from: 1, to: 0.8, duration: 0.3) }
+        views_to_animate.each { |text_view| text_view.layer.basic_animation('opacity', from: 1, to: 0.6, duration: 0.2) }
+      end.and_then do
+        views_to_animate.each { |text_view| text_view.layer.basic_animation('opacity', from: 0.8, to: 0, duration: 0.2) }
       end.and_then do
         set_date_view_text @pageControl.currentPage
 
@@ -123,7 +125,7 @@ class WeatherViewController < UIViewController
         set_forecast_text @pageControl.currentPage
         set_forecast_temp_view_color @pageControl.currentPage
       end.and_then do
-        @text_views.reject { |view| view == @location_name_view }.each { |text_view| text_view.layer.basic_animation('opacity', from: 0.4, to: 1, duration: 0.3) }
+        views_to_animate.each { |text_view| text_view.layer.basic_animation('opacity', from: 0.0, to: 1, duration: 0.4) }
       end.start
 
 
