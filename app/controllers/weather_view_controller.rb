@@ -6,6 +6,21 @@ class WeatherViewController < UIViewController
   OFFSET_TEMP = 10
   attr_accessor :data, :day, :image_views, :text_views, :animate, :number_of_pages, :location_name_view, :forecast_image_view, :forecast_temp_view, :date_view, :loading
   #stylesheet :weather_view
+  #include WeatherViewLayout
+
+  def init_location_name_view
+      @location_name_view = view.viewWithTag 1
+      @location_name_view.text = @data['name']
+      init_style @location_name_view
+      @text_views << @location_name_view
+      @location_name_view
+    end
+
+    def init_style(view)
+      view.layer.masksToBounds = true
+      view.layer.cornerRadius = 6
+      #view.fade_out
+    end
 
   def initWithAnimation(animate=true)
     initWithNibName nil, bundle: nil
@@ -15,9 +30,8 @@ class WeatherViewController < UIViewController
 
 
   def loadView
-    NSLog 'loadView'
-    @layout = WeatherViewLayout.new
-    self.view = @layout.view
+    views = NSBundle.mainBundle.loadNibNamed "WeatherInfoView", owner: self, options: nil
+    self.view = views[0]
   end
 
   def viewDidLoad
@@ -44,11 +58,10 @@ class WeatherViewController < UIViewController
 
     @data ||= []
     WeatherInfo.get do |response|
-      NSLog "hallolo"
       @data = response
       @indicator.stopAnimating if @animate
       @loading = false
-      init_scroll_view
+      #init_scroll_view
       if @data
         landscape_images = @data['photos'].select { |image| image['width'].to_i > image['height'].to_i }
         portrait_images = @data['photos'].select { |image| image['width'].to_i <= image['height'].to_i }
@@ -56,16 +69,16 @@ class WeatherViewController < UIViewController
 
         page = 0
         init_location_name_view
-
-        init_forecast_temp_view(page)
-
-        init_forecast_image_view(page)
-
-        init_date_view(page)
+        #
+        # init_forecast_temp_view(page)
+        #
+        # init_forecast_image_view(page)
+        #
+        # init_date_view(page)
 
 
         #background image
-        @number_of_pages.times do |i|
+        0.times do |i|
           if i % 2 == 0 #even
             BW::HTTP.get(landscape_images[i % landscape_images.size]['photo_url']) do |response|
               if response.ok?
@@ -110,7 +123,7 @@ class WeatherViewController < UIViewController
   end
 
   def scrollViewDidScroll(scrollView)
-    unless @loading
+    if false
       newCurrentPage = (@scrollView.contentOffset.x / @scrollView.frame.size.width).to_i
       if newCurrentPage != @pageControl.currentPage
         @pageControl.currentPage = newCurrentPage
@@ -206,7 +219,6 @@ class WeatherViewController < UIViewController
   end
 
 
-
   def animate_views(sec=3.0)
     @image_views.each { |image_view| image_view.fade_in(duration: sec) }
     @text_views.each { |text_view| text_view.fade_in(duration: sec) }
@@ -227,7 +239,7 @@ class WeatherViewController < UIViewController
   end
 
   def hide_views(sec=3.0)
-    @text_views.each { |text_view| text_view.fade_out(duration: sec) }
+    #@text_views.each { |text_view| text_view.fade_out(duration: sec) }
   end
 
   def init_admob
@@ -236,7 +248,7 @@ class WeatherViewController < UIViewController
     @banner_view.adUnitID = NSBundle.mainBundle.objectForInfoDictionaryKey('admob')
     @banner_view.rootViewController = self
 
-    @banner_view.position = [160, 542]
+    @banner_view.position = [160, 544]
 
     self.view.addSubview(@banner_view)
     request = GADRequest.request

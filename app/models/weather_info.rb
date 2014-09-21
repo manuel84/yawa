@@ -2,7 +2,6 @@ class WeatherInfo
   API_URL = NSBundle.mainBundle.objectForInfoDictionaryKey('host')
 
   def self.get(&callback)
-    NSLog "1"
     result = nil
 
     def result.coordinate
