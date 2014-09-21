@@ -34,7 +34,6 @@ class WeatherInfo
           callback.call result.object
         elsif result.failure?
         end
-
       end
     end
     #else

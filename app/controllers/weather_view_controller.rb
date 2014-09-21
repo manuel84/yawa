@@ -1,26 +1,8 @@
 class WeatherViewController < UIViewController
-  WEEKDAYS = %w(Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag)
-  WEEKDAY_COLORS = %w(#AB6323 #32A364 #3263EF #AB63AB #A26353 #1A3362 #326323)
-  MAX_TEMP = 45
-  MIN_TEMP = 0
-  OFFSET_TEMP = 10
   attr_accessor :data, :day, :image_views, :text_views, :animate, :number_of_pages, :location_name_view, :forecast_image_view, :forecast_temp_view, :date_view, :loading
   #stylesheet :weather_view
-  #include WeatherViewLayout
+  include WeatherViewLayout
 
-  def init_location_name_view
-      @location_name_view = view.viewWithTag 1
-      @location_name_view.text = @data['name']
-      init_style @location_name_view
-      @text_views << @location_name_view
-      @location_name_view
-    end
-
-    def init_style(view)
-      view.layer.masksToBounds = true
-      view.layer.cornerRadius = 6
-      #view.fade_out
-    end
 
   def initWithAnimation(animate=true)
     initWithNibName nil, bundle: nil
@@ -38,43 +20,43 @@ class WeatherViewController < UIViewController
     super
 
     @loading = true
+    @number_of_pages = 7
+    @text_views ||= []
+    @image_views ||= []
+    @data ||= []
 
     init_navigation_bar
 
-    @number_of_pages = 7
+    init_scroll_view
+
 
     init_admob
 
-    if @animate
-      @indicator = UIActivityIndicatorView.large
-      @indicator.frame = [[150, 200], [20, 20]]
-      self.view.addSubview(@indicator)
-      @indicator.hidesWhenStopped = true
-      @indicator.startAnimating
-    end
 
-    @text_views ||= []
-    @image_views ||= []
+    init_loading_indicator if @animate
 
-    @data ||= []
+    init_location_name_view
+    init_forecast_temp_view
+    init_forecast_image_view
+    init_date_view
+
+
     WeatherInfo.get do |response|
       @data = response
       @indicator.stopAnimating if @animate
       @loading = false
-      #init_scroll_view
+      init_page_control
       if @data
         landscape_images = @data['photos'].select { |image| image['width'].to_i > image['height'].to_i }
         portrait_images = @data['photos'].select { |image| image['width'].to_i <= image['height'].to_i }
 
 
         page = 0
-        init_location_name_view
-        #
-        # init_forecast_temp_view(page)
-        #
-        # init_forecast_image_view(page)
-        #
-        # init_date_view(page)
+        set_location_name
+        set_forecast_text page
+        set_forecast_temp_view_color page
+        set_forecast_image page
+        set_date_view_text page
 
 
         #background image
@@ -105,12 +87,14 @@ class WeatherViewController < UIViewController
               else
                 puts 'BAD RESPONSE'
               end
-              @animate ? animate_views : show_views
               @location_name_view.fade_in(3.0)
+              @animate ? animate_views : show_views
+
             end
           end
         end
-
+        @location_name_view.fade_in(3.0)
+        @animate ? animate_views : show_views
       end
 
 
@@ -123,7 +107,7 @@ class WeatherViewController < UIViewController
   end
 
   def scrollViewDidScroll(scrollView)
-    if false
+    unless @animation
       newCurrentPage = (@scrollView.contentOffset.x / @scrollView.frame.size.width).to_i
       if newCurrentPage != @pageControl.currentPage
         @pageControl.currentPage = newCurrentPage
@@ -171,33 +155,6 @@ class WeatherViewController < UIViewController
     self.navigationItem.setHidesBackButton true
   end
 
-  def init_scroll_view
-    @scrollView = UIScrollView.alloc.init
-    @scrollView.frame = CGRectMake(0, 0, App.window.frame.size.width, App.window.frame.size.height)
-
-    @scrollView.pagingEnabled = true
-    @scrollView.backgroundColor = UIColor.blackColor
-
-    @scrollView.contentSize = CGSizeMake(@scrollView.frame.size.width * @number_of_pages, App.window.frame.size.height-68)
-
-    @scrollView.showsHorizontalScrollIndicator = false
-    @scrollView.showsVerticalScrollIndicator = false
-
-    @scrollView.delegate = self
-    self.view.addSubview @scrollView
-
-    @pageControl = UIPageControl.alloc.init
-    @pageControl.frame = CGRectMake(0, @scrollView.frame.size.height - 130, App.window.frame.size.width, 80)
-    @pageControl.numberOfPages = @number_of_pages
-    @pageControl.currentPage = 0
-
-    self.view.addSubview @pageControl
-    self.view.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action: 'toggle_views'))
-    @pageControl.addTarget(self, action: 'clickPageControl:', forControlEvents: UIControlEventAllEvents)
-
-    @scrollView
-  end
-
   def add_image(data, page, top_offset_nr=nil, height=App.window.size.height/2-33)
     width = @scrollView.frame.size.width
     single = false
@@ -239,7 +196,7 @@ class WeatherViewController < UIViewController
   end
 
   def hide_views(sec=3.0)
-    #@text_views.each { |text_view| text_view.fade_out(duration: sec) }
+    @text_views.each { |text_view| text_view.fade_out(duration: sec) }
   end
 
   def init_admob
