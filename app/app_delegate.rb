@@ -1,7 +1,6 @@
 class AppDelegate
 
   def application(application, didFinishLaunchingWithOptions: launchOptions)
-    Teacup::Appearance.apply
     api_host = NSBundle.mainBundle.objectForInfoDictionaryKey('host')
     AFMotion::SessionClient.build_shared(api_host) do
       session_configuration :default

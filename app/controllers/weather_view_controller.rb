@@ -4,8 +4,8 @@ class WeatherViewController < UIViewController
   MAX_TEMP = 45
   MIN_TEMP = 0
   OFFSET_TEMP = 10
-  attr_accessor :data, :day, :image_views, :text_views, :animate, :number_of_pages, :location_name_view, :forecast_image_view, :forecast_temp_view, :date_view
-  stylesheet :weather_view
+  attr_accessor :data, :day, :image_views, :text_views, :animate, :number_of_pages, :location_name_view, :forecast_image_view, :forecast_temp_view, :date_view, :loading
+  #stylesheet :weather_view
 
   def initWithAnimation(animate=true)
     initWithNibName nil, bundle: nil
@@ -13,21 +13,28 @@ class WeatherViewController < UIViewController
     self
   end
 
+
+  def loadView
+    NSLog 'loadView'
+    @layout = WeatherViewLayout.new
+    self.view = @layout.view
+  end
+
   def viewDidLoad
     super
+
+    @loading = true
 
     init_navigation_bar
 
     @number_of_pages = 7
-
-    init_scroll_view
 
     init_admob
 
     if @animate
       @indicator = UIActivityIndicatorView.large
       @indicator.frame = [[150, 200], [20, 20]]
-      @scrollView.addSubview(@indicator)
+      self.view.addSubview(@indicator)
       @indicator.hidesWhenStopped = true
       @indicator.startAnimating
     end
@@ -36,9 +43,12 @@ class WeatherViewController < UIViewController
     @image_views ||= []
 
     @data ||= []
-    Location.all do |response|
+    WeatherInfo.get do |response|
+      NSLog "hallolo"
       @data = response
       @indicator.stopAnimating if @animate
+      @loading = false
+      init_scroll_view
       if @data
         landscape_images = @data['photos'].select { |image| image['width'].to_i > image['height'].to_i }
         portrait_images = @data['photos'].select { |image| image['width'].to_i <= image['height'].to_i }
@@ -93,14 +103,6 @@ class WeatherViewController < UIViewController
 
     end
 
-    @pageControl = UIPageControl.alloc.init
-    @pageControl.frame = CGRectMake(0, @scrollView.frame.size.height - 130, App.window.frame.size.width, 80)
-    @pageControl.numberOfPages = @number_of_pages
-    @pageControl.currentPage = 0
-
-    self.view.addSubview @pageControl
-    self.view.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action: 'toggle_views'))
-    @pageControl.addTarget(self, action: 'clickPageControl:', forControlEvents: UIControlEventAllEvents)
   end
 
   def toggle_views
@@ -108,27 +110,29 @@ class WeatherViewController < UIViewController
   end
 
   def scrollViewDidScroll(scrollView)
-    newCurrentPage = (@scrollView.contentOffset.x / @scrollView.frame.size.width).to_i
-    if newCurrentPage != @pageControl.currentPage
-      @pageControl.currentPage = newCurrentPage
+    unless @loading
+      newCurrentPage = (@scrollView.contentOffset.x / @scrollView.frame.size.width).to_i
+      if newCurrentPage != @pageControl.currentPage
+        @pageControl.currentPage = newCurrentPage
 
-      views_to_animate = @text_views.reject { |view| view == @location_name_view }
-      UIView.animation_chain do
-        views_to_animate.each { |text_view| text_view.layer.basic_animation('opacity', from: 1, to: 0.6, duration: 0.2) }
-      end.and_then do
-        views_to_animate.each { |text_view| text_view.layer.basic_animation('opacity', from: 0.8, to: 0, duration: 0.2) }
-      end.and_then do
-        set_date_view_text @pageControl.currentPage
+        views_to_animate = @text_views.reject { |view| view == @location_name_view }
+        UIView.animation_chain do
+          views_to_animate.each { |text_view| text_view.layer.basic_animation('opacity', from: 1, to: 0.6, duration: 0.2) }
+        end.and_then do
+          views_to_animate.each { |text_view| text_view.layer.basic_animation('opacity', from: 0.8, to: 0, duration: 0.2) }
+        end.and_then do
+          set_date_view_text @pageControl.currentPage
 
-        set_forecast_image @pageControl.currentPage
+          set_forecast_image @pageControl.currentPage
 
-        set_forecast_text @pageControl.currentPage
-        set_forecast_temp_view_color @pageControl.currentPage
-      end.and_then do
-        views_to_animate.each { |text_view| text_view.layer.basic_animation('opacity', from: 0.0, to: 1, duration: 0.4) }
-      end.start
+          set_forecast_text @pageControl.currentPage
+          set_forecast_temp_view_color @pageControl.currentPage
+        end.and_then do
+          views_to_animate.each { |text_view| text_view.layer.basic_animation('opacity', from: 0.0, to: 1, duration: 0.4) }
+        end.start
 
 
+      end
     end
 
     @pageControl.currentPage
@@ -168,6 +172,16 @@ class WeatherViewController < UIViewController
 
     @scrollView.delegate = self
     self.view.addSubview @scrollView
+
+    @pageControl = UIPageControl.alloc.init
+    @pageControl.frame = CGRectMake(0, @scrollView.frame.size.height - 130, App.window.frame.size.width, 80)
+    @pageControl.numberOfPages = @number_of_pages
+    @pageControl.currentPage = 0
+
+    self.view.addSubview @pageControl
+    self.view.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action: 'toggle_views'))
+    @pageControl.addTarget(self, action: 'clickPageControl:', forControlEvents: UIControlEventAllEvents)
+
     @scrollView
   end
 
@@ -191,83 +205,7 @@ class WeatherViewController < UIViewController
     view
   end
 
-  def init_location_name_view
-    @location_name_view = self.view.subview UILabel, :title_view
-    @location_name_view.text = @data['name']
-    init_style @location_name_view
-    @text_views << @location_name_view
-    @location_name_view
-  end
 
-  def init_forecast_temp_view(page)
-    @forecast_temp_view = self.view.subview UILabel, :forecast_temp_view
-    init_style @forecast_temp_view
-
-    set_forecast_text page
-    set_forecast_temp_view_color page
-
-    @text_views << @forecast_temp_view
-
-    @forecast_temp_view
-  end
-
-  def set_forecast_text(page)
-    temperature = @data['weather_forecasts'][page]['temp']['amount'].to_i
-    @forecast_temp_view.text = temperature.to_s + ' °C'
-  end
-
-  def set_forecast_temp_view_color(page)
-    temperature = @data['weather_forecasts'][page]['temp']['amount'].to_i
-    threshold = 100
-    hex_val = (([MIN_TEMP, [(temperature+OFFSET_TEMP), MAX_TEMP].min].max)*255/MAX_TEMP).to_s(16)
-    green = hex_val.hex < threshold ? hex_val : (255 - hex_val.hex).to_s(16)
-    other = hex_val.hex < threshold ? ([100, [80, green.hex].min].max).to_s(16) : ([0, [80, green.hex].min].max).to_s(16)
-    green = '0'+green if green.length <= 1 # normalize '3' => '03'
-    other = '0'+other if other.length <= 1 # normalize '3' => '03'
-    red = hex_val.hex < threshold ? other : 'ff'
-    blue = hex_val.hex < threshold ? 'ff' : other #(255 - hex_val.hex).to_s(16)
-    @forecast_temp_view.backgroundColor = "##{red}#{green}#{blue}".uicolor(0.8)
-  end
-
-  def init_forecast_image_view(page)
-    @forecast_image_view = self.view.subview UIImageView, :forecast_title_view
-    init_style @forecast_image_view
-
-    set_forecast_image page
-    @text_views << @forecast_image_view
-    @forecast_image_view
-  end
-
-  def set_forecast_image(page)
-    BW::HTTP.get(@data['weather_forecasts'][page]['img_url']) do |response|
-      if response.ok?
-        image = UIImage.alloc.initWithData(response.body)
-        @forecast_image_view.image = image
-      else
-        puts 'BAD RESPONSE'
-      end
-    end
-  end
-
-  def init_date_view(page)
-    @date_view = self.view.subview UILabel, :forecast_date_view
-    init_style @date_view
-    set_date_view_text page
-    @text_views << @date_view
-    @date_view
-  end
-
-  def set_date_view_text(page)
-    @date_view.text = (Time.now + page.days).strftime '%a, %d.%m'
-    @date_view.backgroundColor = WEEKDAY_COLORS[(Time.now + page.days).strftime('%u').to_i-1].uicolor(0.8)
-  end
-
-  def init_style(view)
-    view.layer.masksToBounds = true
-    view.layer.cornerRadius = 6
-    view.fade_out
-    @scrollView.bringSubviewToFront view
-  end
 
   def animate_views(sec=3.0)
     @image_views.each { |image_view| image_view.fade_in(duration: sec) }

@@ -26,6 +26,7 @@
 <enum name='kGADErrorNetworkError' value='2'/>
 <enum name='kGADErrorNoFill' value='1'/>
 <enum name='kGADErrorOSVersionTooLow' value='4'/>
+<enum name='kGADErrorReceivedInvalidResponse' value='13'/>
 <enum name='kGADErrorServerError' value='3'/>
 <enum name='kGADErrorTimeout' value='5'/>
 <enum name='kGADGenderFemale' value='2'/>
@@ -307,12 +308,6 @@
 </method>
 <method selector='isReady'>
 <retval declared_type='BOOL' type='B'/>
-</method>
-<method selector='loadAndDisplayRequest:usingWindow:initialImage:'>
-<arg declared_type='GADRequest*' index='0' name='request' type='@'/>
-<arg declared_type='UIWindow*' index='1' name='window' type='@'/>
-<arg declared_type='UIImage*' index='2' name='image' type='@'/>
-<retval declared_type='void' type='v'/>
 </method>
 <method selector='loadRequest:'>
 <arg declared_type='GADRequest*' index='0' name='request' type='@'/>

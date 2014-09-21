@@ -1,0 +1,925 @@
+<?xml version='1.0'?>
+<signatures version='1.0'>
+<struct name='GADAdSize' type='{GADAdSize=&quot;size&quot;{CGSize=&quot;width&quot;f&quot;height&quot;f}&quot;flags&quot;I}' type64='{GADAdSize=&quot;size&quot;{CGSize=&quot;width&quot;d&quot;height&quot;d}&quot;flags&quot;Q}'>
+<field declared_type='CGSize' name='size' type='{CGSize=&quot;width&quot;f&quot;height&quot;f}' type64='{CGSize=&quot;width&quot;d&quot;height&quot;d}'/>
+<field declared_type='NSUInteger' name='flags' type='I' type64='Q'/>
+</struct>
+<constant const='true' declared_type='GADAdSize' name='kGADAdSizeBanner' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<constant const='true' declared_type='GADAdSize' name='kGADAdSizeFullBanner' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<constant const='true' declared_type='GADAdSize' name='kGADAdSizeInvalid' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<constant const='true' declared_type='GADAdSize' name='kGADAdSizeLargeBanner' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<constant const='true' declared_type='GADAdSize' name='kGADAdSizeLeaderboard' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<constant const='true' declared_type='GADAdSize' name='kGADAdSizeMediumRectangle' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<constant const='true' declared_type='GADAdSize' name='kGADAdSizeSkyscraper' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<constant const='true' declared_type='GADAdSize' name='kGADAdSizeSmartBannerLandscape' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<constant const='true' declared_type='GADAdSize' name='kGADAdSizeSmartBannerPortrait' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<constant const='true' declared_type='NSString*' name='kGADErrorDomain' type='@'/>
+<string_constant name='GAD_SIMULATOR_ID' nsstring='true' value='Simulator'/>
+<enum name='kGADErrorInternalError' value='11'/>
+<enum name='kGADErrorInterstitialAlreadyUsed' value='6'/>
+<enum name='kGADErrorInvalidArgument' value='12'/>
+<enum name='kGADErrorInvalidRequest' value='0'/>
+<enum name='kGADErrorMediationAdapterError' value='8'/>
+<enum name='kGADErrorMediationDataError' value='7'/>
+<enum name='kGADErrorMediationInvalidAdSize' value='10'/>
+<enum name='kGADErrorMediationNoFill' value='9'/>
+<enum name='kGADErrorNetworkError' value='2'/>
+<enum name='kGADErrorNoFill' value='1'/>
+<enum name='kGADErrorOSVersionTooLow' value='4'/>
+<enum name='kGADErrorServerError' value='3'/>
+<enum name='kGADErrorTimeout' value='5'/>
+<enum name='kGADGenderFemale' value='2'/>
+<enum name='kGADGenderMale' value='1'/>
+<enum name='kGADGenderUnknown' value='0'/>
+<enum name='kGADInAppPurchaseStatusCancel' value='2'/>
+<enum name='kGADInAppPurchaseStatusError' value='0'/>
+<enum name='kGADInAppPurchaseStatusInvalidProduct' value='3'/>
+<enum name='kGADInAppPurchaseStatusSuccessful' value='1'/>
+<enum name='kGADSearchBorderTypeDashed' value='1'/>
+<enum name='kGADSearchBorderTypeDotted' value='2'/>
+<enum name='kGADSearchBorderTypeNone' value='0'/>
+<enum name='kGADSearchBorderTypeSolid' value='3'/>
+<enum name='kGADSearchCallButtonDark' value='2'/>
+<enum name='kGADSearchCallButtonLight' value='0'/>
+<enum name='kGADSearchCallButtonMedium' value='1'/>
+<function name='CGSizeFromGADAdSize'>
+<arg declared_type='GADAdSize' name='size' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<retval declared_type='CGSize' type='{CGSize=ff}' type64='{CGSize=dd}'/>
+</function>
+<function name='GADAdSizeEqualToSize'>
+<arg declared_type='GADAdSize' name='size1' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<arg declared_type='GADAdSize' name='size2' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<retval declared_type='BOOL' type='B'/>
+</function>
+<function name='GADAdSizeFromCGSize'>
+<arg declared_type='CGSize' name='size' type='{CGSize=ff}' type64='{CGSize=dd}'/>
+<retval declared_type='GADAdSize' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+</function>
+<function name='GADAdSizeFullWidthLandscapeWithHeight'>
+<arg declared_type='CGFloat' name='height' type='f' type64='d'/>
+<retval declared_type='GADAdSize' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+</function>
+<function name='GADAdSizeFullWidthPortraitWithHeight'>
+<arg declared_type='CGFloat' name='height' type='f' type64='d'/>
+<retval declared_type='GADAdSize' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+</function>
+<function name='IsGADAdSizeValid'>
+<arg declared_type='GADAdSize' name='size' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<retval declared_type='BOOL' type='B'/>
+</function>
+<function name='NSStringFromGADAdSize'>
+<arg declared_type='GADAdSize' name='size' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<retval declared_type='NSString*' type='@'/>
+</function>
+<class name='DFPBannerView'>
+<method selector='adSizeDelegate'>
+<retval declared_type='id' type='@'/>
+</method>
+<method selector='appEventDelegate'>
+<retval declared_type='id' type='@'/>
+</method>
+<method selector='enableManualImpressions'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method selector='recordImpression'>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='resize:'>
+<arg declared_type='GADAdSize' index='0' name='size' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setAdSizeDelegate:'>
+<arg declared_type='id' index='0' name='adSizeDelegate' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setAppEventDelegate:'>
+<arg declared_type='id' index='0' name='appEventDelegate' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setEnableManualImpressions:'>
+<arg declared_type='BOOL' index='0' name='enableManualImpressions' type='B'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setValidAdSizes:'>
+<arg declared_type='NSArray*' index='0' name='validAdSizes' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setValidAdSizesWithSizes:' sentinel='0' variadic='true'>
+<arg declared_type='GADAdSize*' index='0' name='firstSize' type='^{GADAdSize={CGSize=ff}I}' type64='^{GADAdSize={CGSize=dd}Q}'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='validAdSizes'>
+<retval declared_type='NSArray*' type='@'/>
+</method>
+</class>
+<class name='DFPExtras'>
+<method selector='publisherProvidedID'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='setPublisherProvidedID:'>
+<arg declared_type='NSString*' index='0' name='publisherProvidedID' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='DFPInterstitial'>
+<method selector='appEventDelegate'>
+<retval declared_type='id' type='@'/>
+</method>
+<method selector='setAppEventDelegate:'>
+<arg declared_type='id' index='0' name='appEventDelegate' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='DFPSwipeableBannerView'>
+<method selector='setSwipeDelegate:'>
+<arg declared_type='id' index='0' name='swipeDelegate' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='swipeDelegate'>
+<retval declared_type='id' type='@'/>
+</method>
+</class>
+<class name='GADAdMobExtras'>
+<method selector='additionalParameters'>
+<retval declared_type='NSDictionary*' type='@'/>
+</method>
+<method selector='setAdditionalParameters:'>
+<arg declared_type='NSDictionary*' index='0' name='additionalParameters' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='GADBannerView'>
+<method selector='adNetworkClassName'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='adSize'>
+<retval declared_type='GADAdSize' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+</method>
+<method selector='adUnitID'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='delegate'>
+<retval declared_type='id' type='@'/>
+</method>
+<method selector='hasAutoRefreshed'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method selector='inAppPurchaseDelegate'>
+<retval declared_type='id' type='@'/>
+</method>
+<method selector='initWithAdSize:'>
+<arg declared_type='GADAdSize' index='0' name='adSize' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<retval declared_type='id' type='@'/>
+</method>
+<method selector='initWithAdSize:origin:'>
+<arg declared_type='GADAdSize' index='0' name='adSize' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<arg declared_type='CGPoint' index='1' name='origin' type='{CGPoint=ff}' type64='{CGPoint=dd}'/>
+<retval declared_type='id' type='@'/>
+</method>
+<method selector='loadRequest:'>
+<arg declared_type='GADRequest*' index='0' name='request' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='mediatedAdView'>
+<retval declared_type='UIView*' type='@'/>
+</method>
+<method selector='rootViewController'>
+<retval declared_type='UIViewController*' type='@'/>
+</method>
+<method selector='setAdSize:'>
+<arg declared_type='GADAdSize' index='0' name='adSize' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setAdUnitID:'>
+<arg declared_type='NSString*' index='0' name='adUnitID' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setDelegate:'>
+<arg declared_type='id' index='0' name='delegate' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setInAppPurchaseDelegate:'>
+<arg declared_type='id' index='0' name='inAppPurchaseDelegate' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setRootViewController:'>
+<arg declared_type='UIViewController*' index='0' name='rootViewController' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='GADCustomEventExtras'>
+<method selector='allExtras'>
+<retval declared_type='NSDictionary*' type='@'/>
+</method>
+<method selector='extrasForLabel:'>
+<arg declared_type='NSString*' index='0' name='label' type='@'/>
+<retval declared_type='NSDictionary*' type='@'/>
+</method>
+<method selector='removeAllExtras'>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setExtras:forLabel:'>
+<arg declared_type='NSDictionary*' index='0' name='extras' type='@'/>
+<arg declared_type='NSString*' index='1' name='label' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='GADCustomEventRequest'>
+<method selector='additionalParameters'>
+<retval declared_type='NSDictionary*' type='@'/>
+</method>
+<method selector='isTesting'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method selector='userBirthday'>
+<retval declared_type='NSDate*' type='@'/>
+</method>
+<method selector='userGender'>
+<retval declared_type='GADGender' type='i' type64='q'/>
+</method>
+<method selector='userHasLocation'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method selector='userKeywords'>
+<retval declared_type='NSArray*' type='@'/>
+</method>
+<method selector='userLatitude'>
+<retval declared_type='CGFloat' type='f' type64='d'/>
+</method>
+<method selector='userLocationAccuracyInMeters'>
+<retval declared_type='CGFloat' type='f' type64='d'/>
+</method>
+<method selector='userLocationDescription'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='userLongitude'>
+<retval declared_type='CGFloat' type='f' type64='d'/>
+</method>
+</class>
+<class name='GADDefaultInAppPurchase'>
+<method class_method='true' selector='disableDefaultPurchaseFlow'>
+<retval declared_type='void' type='v'/>
+</method>
+<method class_method='true' selector='enableDefaultPurchaseFlowWithDelegate:'>
+<arg declared_type='id' index='0' name='delegate' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='finishTransaction'>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='paymentTransaction'>
+<retval declared_type='SKPaymentTransaction*' type='@'/>
+</method>
+<method selector='productID'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='quantity'>
+<retval declared_type='NSInteger' type='i' type64='q'/>
+</method>
+</class>
+<class name='GADInAppPurchase'>
+<method selector='productID'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='quantity'>
+<retval declared_type='NSInteger' type='i' type64='q'/>
+</method>
+<method selector='reportPurchaseStatus:'>
+<arg declared_type='GADInAppPurchaseStatus' index='0' name='purchaseStatus' type='i' type64='q'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='GADInterstitial'>
+<method selector='adNetworkClassName'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='adUnitID'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='delegate'>
+<retval declared_type='id' type='@'/>
+</method>
+<method selector='hasBeenUsed'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method selector='inAppPurchaseDelegate'>
+<retval declared_type='id' type='@'/>
+</method>
+<method selector='isReady'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method selector='loadAndDisplayRequest:usingWindow:initialImage:'>
+<arg declared_type='GADRequest*' index='0' name='request' type='@'/>
+<arg declared_type='UIWindow*' index='1' name='window' type='@'/>
+<arg declared_type='UIImage*' index='2' name='image' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='loadRequest:'>
+<arg declared_type='GADRequest*' index='0' name='request' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='presentFromRootViewController:'>
+<arg declared_type='UIViewController*' index='0' name='rootViewController' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setAdUnitID:'>
+<arg declared_type='NSString*' index='0' name='adUnitID' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setDelegate:'>
+<arg declared_type='id' index='0' name='delegate' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setInAppPurchaseDelegate:'>
+<arg declared_type='id' index='0' name='inAppPurchaseDelegate' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='GADRequest'>
+<method selector='adNetworkExtrasFor:'>
+<arg declared_type='Class*' index='0' name='aClass' type='#'/>
+<retval declared_type='id' type='@'/>
+</method>
+<method selector='addKeyword:'>
+<arg declared_type='NSString*' index='0' name='keyword' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='additionalParameters'>
+<retval declared_type='NSDictionary*' type='@'/>
+</method>
+<method selector='birthday'>
+<retval declared_type='NSDate*' type='@'/>
+</method>
+<method selector='contentURL'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='gender'>
+<retval declared_type='GADGender' type='i' type64='q'/>
+</method>
+<method selector='isTesting'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method selector='keywords'>
+<retval declared_type='NSMutableArray*' type='@'/>
+</method>
+<method selector='mediationExtras'>
+<retval declared_type='NSDictionary*' type='@'/>
+</method>
+<method selector='registerAdNetworkExtras:'>
+<arg declared_type='id' index='0' name='extras' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='removeAdNetworkExtrasFor:'>
+<arg declared_type='Class*' index='0' name='aClass' type='#'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method class_method='true' selector='request'>
+<retval declared_type='id' type='@'/>
+</method>
+<method class_method='true' selector='sdkVersion'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='setAdditionalParameters:'>
+<arg declared_type='NSDictionary*' index='0' name='additionalParameters' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setBirthday:'>
+<arg declared_type='NSDate*' index='0' name='birthday' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setBirthdayWithMonth:day:year:'>
+<arg declared_type='NSInteger' index='0' name='m' type='i' type64='q'/>
+<arg declared_type='NSInteger' index='1' name='d' type='i' type64='q'/>
+<arg declared_type='NSInteger' index='2' name='y' type='i' type64='q'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setContentURL:'>
+<arg declared_type='NSString*' index='0' name='contentURL' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setGender:'>
+<arg declared_type='GADGender' index='0' name='gender' type='i' type64='q'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setKeywords:'>
+<arg declared_type='NSMutableArray*' index='0' name='keywords' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setLocationWithDescription:'>
+<arg declared_type='NSString*' index='0' name='locationDescription' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setLocationWithLatitude:longitude:accuracy:'>
+<arg declared_type='CGFloat' index='0' name='latitude' type='f' type64='d'/>
+<arg declared_type='CGFloat' index='1' name='longitude' type='f' type64='d'/>
+<arg declared_type='CGFloat' index='2' name='accuracyInMeters' type='f' type64='d'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setMediationExtras:'>
+<arg declared_type='NSDictionary*' index='0' name='mediationExtras' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setTestDevices:'>
+<arg declared_type='NSArray*' index='0' name='testDevices' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setTesting:'>
+<arg declared_type='BOOL' index='0' name='testing' type='B'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='tagForChildDirectedTreatment:'>
+<arg declared_type='BOOL' index='0' name='childDirectedTreatment' type='B'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='testDevices'>
+<retval declared_type='NSArray*' type='@'/>
+</method>
+</class>
+<class name='GADSearchRequest'>
+<method selector='anchorTextColor'>
+<retval declared_type='UIColor*' type='@'/>
+</method>
+<method selector='backgroundColor'>
+<retval declared_type='UIColor*' type='@'/>
+</method>
+<method selector='borderColor'>
+<retval declared_type='UIColor*' type='@'/>
+</method>
+<method selector='borderThickness'>
+<retval declared_type='NSUInteger' type='I' type64='Q'/>
+</method>
+<method selector='borderType'>
+<retval declared_type='GADSearchBorderType' type='I' type64='Q'/>
+</method>
+<method selector='callButtonColor'>
+<retval declared_type='GADSearchCallButtonColor' type='I' type64='Q'/>
+</method>
+<method selector='customChannels'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='descriptionTextColor'>
+<retval declared_type='UIColor*' type='@'/>
+</method>
+<method selector='fontFamily'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='gradientFrom'>
+<retval declared_type='UIColor*' type='@'/>
+</method>
+<method selector='gradientTo'>
+<retval declared_type='UIColor*' type='@'/>
+</method>
+<method selector='headerColor'>
+<retval declared_type='UIColor*' type='@'/>
+</method>
+<method selector='headerTextSize'>
+<retval declared_type='NSUInteger' type='I' type64='Q'/>
+</method>
+<method selector='query'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='request'>
+<retval declared_type='GADRequest*' type='@'/>
+</method>
+<method selector='setAnchorTextColor:'>
+<arg declared_type='UIColor*' index='0' name='anchorTextColor' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setBackgroundColor:'>
+<arg declared_type='UIColor*' index='0' name='backgroundColor' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setBackgroundGradientFrom:toColor:'>
+<arg declared_type='UIColor*' index='0' name='from' type='@'/>
+<arg declared_type='UIColor*' index='1' name='toColor' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setBackgroundSolid:'>
+<arg declared_type='UIColor*' index='0' name='color' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setBorderColor:'>
+<arg declared_type='UIColor*' index='0' name='borderColor' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setBorderThickness:'>
+<arg declared_type='NSUInteger' index='0' name='borderThickness' type='I' type64='Q'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setBorderType:'>
+<arg declared_type='GADSearchBorderType' index='0' name='borderType' type='I' type64='Q'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setCallButtonColor:'>
+<arg declared_type='GADSearchCallButtonColor' index='0' name='callButtonColor' type='I' type64='Q'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setCustomChannels:'>
+<arg declared_type='NSString*' index='0' name='customChannels' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setDescriptionTextColor:'>
+<arg declared_type='UIColor*' index='0' name='descriptionTextColor' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setFontFamily:'>
+<arg declared_type='NSString*' index='0' name='fontFamily' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setGradientFrom:'>
+<arg declared_type='UIColor*' index='0' name='gradientFrom' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setGradientTo:'>
+<arg declared_type='UIColor*' index='0' name='gradientTo' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setHeaderColor:'>
+<arg declared_type='UIColor*' index='0' name='headerColor' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setHeaderTextSize:'>
+<arg declared_type='NSUInteger' index='0' name='headerTextSize' type='I' type64='Q'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setQuery:'>
+<arg declared_type='NSString*' index='0' name='query' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='NSObject'>
+<method selector='adView:didFailToReceiveAdWithError:'>
+<arg declared_type='GADBannerView*' index='0' name='view' type='@'/>
+<arg declared_type='GADRequestError*' index='1' name='error' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adView:didReceiveAppEvent:withInfo:'>
+<arg declared_type='GADBannerView*' index='0' name='banner' type='@'/>
+<arg declared_type='NSString*' index='1' name='name' type='@'/>
+<arg declared_type='NSString*' index='2' name='info' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adView:willChangeAdSizeTo:'>
+<arg declared_type='GADBannerView*' index='0' name='view' type='@'/>
+<arg declared_type='GADAdSize' index='1' name='size' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adViewDidActivateAd:'>
+<arg declared_type='GADBannerView*' index='0' name='banner' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adViewDidDeactivateAd:'>
+<arg declared_type='GADBannerView*' index='0' name='banner' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adViewDidDismissScreen:'>
+<arg declared_type='GADBannerView*' index='0' name='adView' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adViewDidReceiveAd:'>
+<arg declared_type='GADBannerView*' index='0' name='view' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adViewWillDismissScreen:'>
+<arg declared_type='GADBannerView*' index='0' name='adView' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adViewWillLeaveApplication:'>
+<arg declared_type='GADBannerView*' index='0' name='adView' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adViewWillPresentScreen:'>
+<arg declared_type='GADBannerView*' index='0' name='adView' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventBanner:clickDidOccurInAd:'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<arg declared_type='UIView*' index='1' name='view' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventBanner:didFailAd:'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<arg declared_type='NSError*' index='1' name='error' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventBanner:didReceiveAd:'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<arg declared_type='UIView*' index='1' name='view' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventBannerDidDismissModal:'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventBannerWillDismissModal:'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventBannerWillLeaveApplication:'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventBannerWillPresentModal:'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventInterstitial:didFailAd:'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<arg declared_type='NSError*' index='1' name='error' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventInterstitial:didReceiveAd:'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<arg declared_type='NSObject*' index='1' name='ad' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventInterstitialDidDismiss:'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventInterstitialWillDismiss:'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventInterstitialWillLeaveApplication:'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventInterstitialWillPresent:'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='delegate'>
+<retval declared_type='id' type='@'/>
+</method>
+<method selector='didReceiveInAppPurchase:'>
+<arg declared_type='GADInAppPurchase*' index='0' name='purchase' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='interstitial:didFailToReceiveAdWithError:'>
+<arg declared_type='GADInterstitial*' index='0' name='ad' type='@'/>
+<arg declared_type='GADRequestError*' index='1' name='error' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='interstitial:didReceiveAppEvent:withInfo:'>
+<arg declared_type='GADInterstitial*' index='0' name='interstitial' type='@'/>
+<arg declared_type='NSString*' index='1' name='name' type='@'/>
+<arg declared_type='NSString*' index='2' name='info' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='interstitialDidDismissScreen:'>
+<arg declared_type='GADInterstitial*' index='0' name='ad' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='interstitialDidReceiveAd:'>
+<arg declared_type='GADInterstitial*' index='0' name='ad' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='interstitialWillDismissScreen:'>
+<arg declared_type='GADInterstitial*' index='0' name='ad' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='interstitialWillLeaveApplication:'>
+<arg declared_type='GADInterstitial*' index='0' name='ad' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='interstitialWillPresentScreen:'>
+<arg declared_type='GADInterstitial*' index='0' name='ad' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='presentFromRootViewController:'>
+<arg declared_type='UIViewController*' index='0' name='rootViewController' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='requestBannerAd:parameter:label:request:'>
+<arg declared_type='GADAdSize' index='0' name='adSize' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<arg declared_type='NSString*' index='1' name='serverParameter' type='@'/>
+<arg declared_type='NSString*' index='2' name='serverLabel' type='@'/>
+<arg declared_type='GADCustomEventRequest*' index='3' name='request' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='requestInterstitialAdWithParameter:label:request:'>
+<arg declared_type='NSString*' index='0' name='serverParameter' type='@'/>
+<arg declared_type='NSString*' index='1' name='serverLabel' type='@'/>
+<arg declared_type='GADCustomEventRequest*' index='2' name='request' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setDelegate:'>
+<arg declared_type='id' index='0' name='delegate' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='shouldStartPurchaseForProductID:quantity:'>
+<arg declared_type='NSString*' index='0' name='productID' type='@'/>
+<arg declared_type='NSInteger' index='1' name='quantity' type='i' type64='q'/>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method selector='userDidPayForPurchase:'>
+<arg declared_type='GADDefaultInAppPurchase*' index='0' name='defaultInAppPurchase' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='viewControllerForPresentingModalView'>
+<retval declared_type='UIViewController*' type='@'/>
+</method>
+</class>
+<informal_protocol name='GADAdSizeDelegate'>
+<method selector='adView:willChangeAdSizeTo:' type='v24@0:4@8{GADAdSize={CGSize=ff}I}12' type64='v48@0:8@16{GADAdSize={CGSize=dd}Q}24'>
+<arg declared_type='GADBannerView*' index='0' name='view' type='@'/>
+<arg declared_type='GADAdSize' index='1' name='size' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<retval declared_type='void' type='v'/>
+</method>
+</informal_protocol>
+<informal_protocol name='GADAppEventDelegate'>
+<method selector='adView:didReceiveAppEvent:withInfo:' type='v20@0:4@8@12@16' type64='v40@0:8@16@24@32'>
+<arg declared_type='GADBannerView*' index='0' name='banner' type='@'/>
+<arg declared_type='NSString*' index='1' name='name' type='@'/>
+<arg declared_type='NSString*' index='2' name='info' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='interstitial:didReceiveAppEvent:withInfo:' type='v20@0:4@8@12@16' type64='v40@0:8@16@24@32'>
+<arg declared_type='GADInterstitial*' index='0' name='interstitial' type='@'/>
+<arg declared_type='NSString*' index='1' name='name' type='@'/>
+<arg declared_type='NSString*' index='2' name='info' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</informal_protocol>
+<informal_protocol name='GADBannerViewDelegate'>
+<method selector='adView:didFailToReceiveAdWithError:' type='v16@0:4@8@12' type64='v32@0:8@16@24'>
+<arg declared_type='GADBannerView*' index='0' name='view' type='@'/>
+<arg declared_type='GADRequestError*' index='1' name='error' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adViewDidDismissScreen:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='GADBannerView*' index='0' name='adView' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adViewDidReceiveAd:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='GADBannerView*' index='0' name='view' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adViewWillDismissScreen:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='GADBannerView*' index='0' name='adView' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adViewWillLeaveApplication:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='GADBannerView*' index='0' name='adView' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adViewWillPresentScreen:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='GADBannerView*' index='0' name='adView' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</informal_protocol>
+<informal_protocol name='GADCustomEventBanner'>
+<method selector='delegate' type='@8@0:4' type64='@16@0:8'>
+<retval declared_type='id' type='@'/>
+</method>
+<method selector='requestBannerAd:parameter:label:request:' type='v32@0:4{GADAdSize={CGSize=ff}I}8@20@24@28' type64='v64@0:8{GADAdSize={CGSize=dd}Q}16@40@48@56'>
+<arg declared_type='GADAdSize' index='0' name='adSize' type='{GADAdSize={CGSize=ff}I}' type64='{GADAdSize={CGSize=dd}Q}'/>
+<arg declared_type='NSString*' index='1' name='serverParameter' type='@'/>
+<arg declared_type='NSString*' index='2' name='serverLabel' type='@'/>
+<arg declared_type='GADCustomEventRequest*' index='3' name='request' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setDelegate:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='id' index='0' name='delegate' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</informal_protocol>
+<informal_protocol name='GADCustomEventBannerDelegate'>
+<method selector='customEventBanner:clickDidOccurInAd:' type='v16@0:4@8@12' type64='v32@0:8@16@24'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<arg declared_type='UIView*' index='1' name='view' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventBanner:didFailAd:' type='v16@0:4@8@12' type64='v32@0:8@16@24'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<arg declared_type='NSError*' index='1' name='error' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventBanner:didReceiveAd:' type='v16@0:4@8@12' type64='v32@0:8@16@24'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<arg declared_type='UIView*' index='1' name='view' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventBannerDidDismissModal:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventBannerWillDismissModal:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventBannerWillLeaveApplication:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventBannerWillPresentModal:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='viewControllerForPresentingModalView' type='@8@0:4' type64='@16@0:8'>
+<retval declared_type='UIViewController*' type='@'/>
+</method>
+</informal_protocol>
+<informal_protocol name='GADCustomEventInterstitial'>
+<method selector='delegate' type='@8@0:4' type64='@16@0:8'>
+<retval declared_type='id' type='@'/>
+</method>
+<method selector='presentFromRootViewController:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='UIViewController*' index='0' name='rootViewController' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='requestInterstitialAdWithParameter:label:request:' type='v20@0:4@8@12@16' type64='v40@0:8@16@24@32'>
+<arg declared_type='NSString*' index='0' name='serverParameter' type='@'/>
+<arg declared_type='NSString*' index='1' name='serverLabel' type='@'/>
+<arg declared_type='GADCustomEventRequest*' index='2' name='request' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setDelegate:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='id' index='0' name='delegate' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</informal_protocol>
+<informal_protocol name='GADCustomEventInterstitialDelegate'>
+<method selector='customEventInterstitial:didFailAd:' type='v16@0:4@8@12' type64='v32@0:8@16@24'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<arg declared_type='NSError*' index='1' name='error' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventInterstitial:didReceiveAd:' type='v16@0:4@8@12' type64='v32@0:8@16@24'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<arg declared_type='NSObject*' index='1' name='ad' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventInterstitialDidDismiss:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventInterstitialWillDismiss:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventInterstitialWillLeaveApplication:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='customEventInterstitialWillPresent:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='id' index='0' name='customEvent' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</informal_protocol>
+<informal_protocol name='GADDefaultInAppPurchaseDelegate'>
+<method selector='shouldStartPurchaseForProductID:quantity:' type='B16@0:4@8i12' type64='B32@0:8@16q24'>
+<arg declared_type='NSString*' index='0' name='productID' type='@'/>
+<arg declared_type='NSInteger' index='1' name='quantity' type='i' type64='q'/>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method selector='userDidPayForPurchase:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='GADDefaultInAppPurchase*' index='0' name='defaultInAppPurchase' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</informal_protocol>
+<informal_protocol name='GADInAppPurchaseDelegate'>
+<method selector='didReceiveInAppPurchase:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='GADInAppPurchase*' index='0' name='purchase' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</informal_protocol>
+<informal_protocol name='GADInterstitialDelegate'>
+<method selector='interstitial:didFailToReceiveAdWithError:' type='v16@0:4@8@12' type64='v32@0:8@16@24'>
+<arg declared_type='GADInterstitial*' index='0' name='ad' type='@'/>
+<arg declared_type='GADRequestError*' index='1' name='error' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='interstitialDidDismissScreen:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='GADInterstitial*' index='0' name='ad' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='interstitialDidReceiveAd:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='GADInterstitial*' index='0' name='ad' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='interstitialWillDismissScreen:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='GADInterstitial*' index='0' name='ad' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='interstitialWillLeaveApplication:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='GADInterstitial*' index='0' name='ad' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='interstitialWillPresentScreen:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='GADInterstitial*' index='0' name='ad' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</informal_protocol>
+<informal_protocol name='GADSwipeableBannerViewDelegate'>
+<method selector='adViewDidActivateAd:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='GADBannerView*' index='0' name='banner' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='adViewDidDeactivateAd:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='GADBannerView*' index='0' name='banner' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</informal_protocol>
+</signatures>

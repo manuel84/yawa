@@ -43,21 +43,21 @@
 <enum name='COCOAPODS_VERSION_MAJOR_AFNetworking_Serialization' value='2'/>
 <enum name='COCOAPODS_VERSION_MAJOR_AFNetworking_UIKit' value='2'/>
 <enum name='COCOAPODS_VERSION_MAJOR_Reachability' value='3'/>
-<enum name='COCOAPODS_VERSION_MINOR_AFNetworking' value='1'/>
-<enum name='COCOAPODS_VERSION_MINOR_AFNetworking_NSURLConnection' value='1'/>
-<enum name='COCOAPODS_VERSION_MINOR_AFNetworking_NSURLSession' value='1'/>
-<enum name='COCOAPODS_VERSION_MINOR_AFNetworking_Reachability' value='1'/>
-<enum name='COCOAPODS_VERSION_MINOR_AFNetworking_Security' value='1'/>
-<enum name='COCOAPODS_VERSION_MINOR_AFNetworking_Serialization' value='1'/>
-<enum name='COCOAPODS_VERSION_MINOR_AFNetworking_UIKit' value='1'/>
+<enum name='COCOAPODS_VERSION_MINOR_AFNetworking' value='2'/>
+<enum name='COCOAPODS_VERSION_MINOR_AFNetworking_NSURLConnection' value='2'/>
+<enum name='COCOAPODS_VERSION_MINOR_AFNetworking_NSURLSession' value='2'/>
+<enum name='COCOAPODS_VERSION_MINOR_AFNetworking_Reachability' value='2'/>
+<enum name='COCOAPODS_VERSION_MINOR_AFNetworking_Security' value='2'/>
+<enum name='COCOAPODS_VERSION_MINOR_AFNetworking_Serialization' value='2'/>
+<enum name='COCOAPODS_VERSION_MINOR_AFNetworking_UIKit' value='2'/>
 <enum name='COCOAPODS_VERSION_MINOR_Reachability' value='1'/>
-<enum name='COCOAPODS_VERSION_PATCH_AFNetworking' value='0'/>
-<enum name='COCOAPODS_VERSION_PATCH_AFNetworking_NSURLConnection' value='0'/>
-<enum name='COCOAPODS_VERSION_PATCH_AFNetworking_NSURLSession' value='0'/>
-<enum name='COCOAPODS_VERSION_PATCH_AFNetworking_Reachability' value='0'/>
-<enum name='COCOAPODS_VERSION_PATCH_AFNetworking_Security' value='0'/>
-<enum name='COCOAPODS_VERSION_PATCH_AFNetworking_Serialization' value='0'/>
-<enum name='COCOAPODS_VERSION_PATCH_AFNetworking_UIKit' value='0'/>
+<enum name='COCOAPODS_VERSION_PATCH_AFNetworking' value='4'/>
+<enum name='COCOAPODS_VERSION_PATCH_AFNetworking_NSURLConnection' value='4'/>
+<enum name='COCOAPODS_VERSION_PATCH_AFNetworking_NSURLSession' value='4'/>
+<enum name='COCOAPODS_VERSION_PATCH_AFNetworking_Reachability' value='4'/>
+<enum name='COCOAPODS_VERSION_PATCH_AFNetworking_Security' value='4'/>
+<enum name='COCOAPODS_VERSION_PATCH_AFNetworking_Serialization' value='4'/>
+<enum name='COCOAPODS_VERSION_PATCH_AFNetworking_UIKit' value='4'/>
 <enum name='COCOAPODS_VERSION_PATCH_Reachability' value='1'/>
 <enum name='NEEDS_DISPATCH_RETAIN_RELEASE' value='0'/>
 <enum name='NotReachable' value='0'/>
@@ -107,7 +107,7 @@
 <class name='AFHTTPRequestOperationManager'>
 <method selector='DELETE:parameters:success:failure:'>
 <arg declared_type='NSString*' index='0' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='1' name='parameters' type='@'/>
+<arg declared_type='id' index='1' name='parameters' type='@'/>
 <arg declared_type='void (^)(AFHTTPRequestOperation *, id)' function_pointer='true' index='2' name='success' type='@?'>
 <arg declared_type='AFHTTPRequestOperation*' type='@'/>
 <arg declared_type='id' type='@'/>
@@ -122,7 +122,7 @@
 </method>
 <method selector='GET:parameters:success:failure:'>
 <arg declared_type='NSString*' index='0' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='1' name='parameters' type='@'/>
+<arg declared_type='id' index='1' name='parameters' type='@'/>
 <arg declared_type='void (^)(AFHTTPRequestOperation *, id)' function_pointer='true' index='2' name='success' type='@?'>
 <arg declared_type='AFHTTPRequestOperation*' type='@'/>
 <arg declared_type='id' type='@'/>
@@ -137,7 +137,7 @@
 </method>
 <method selector='HEAD:parameters:success:failure:'>
 <arg declared_type='NSString*' index='0' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='1' name='parameters' type='@'/>
+<arg declared_type='id' index='1' name='parameters' type='@'/>
 <arg declared_type='void (^)(AFHTTPRequestOperation *)' function_pointer='true' index='2' name='success' type='@?'>
 <arg declared_type='AFHTTPRequestOperation*' type='@'/>
 <retval declared_type='void' type='v'/>
@@ -165,7 +165,7 @@
 </method>
 <method selector='PATCH:parameters:success:failure:'>
 <arg declared_type='NSString*' index='0' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='1' name='parameters' type='@'/>
+<arg declared_type='id' index='1' name='parameters' type='@'/>
 <arg declared_type='void (^)(AFHTTPRequestOperation *, id)' function_pointer='true' index='2' name='success' type='@?'>
 <arg declared_type='AFHTTPRequestOperation*' type='@'/>
 <arg declared_type='id' type='@'/>
@@ -180,7 +180,7 @@
 </method>
 <method selector='POST:parameters:constructingBodyWithBlock:success:failure:'>
 <arg declared_type='NSString*' index='0' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='1' name='parameters' type='@'/>
+<arg declared_type='id' index='1' name='parameters' type='@'/>
 <arg declared_type='void (^)(id)' function_pointer='true' index='2' name='block' type='@?'>
 <arg declared_type='id' type='@'/>
 <retval declared_type='void' type='v'/>
@@ -199,7 +199,7 @@
 </method>
 <method selector='POST:parameters:success:failure:'>
 <arg declared_type='NSString*' index='0' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='1' name='parameters' type='@'/>
+<arg declared_type='id' index='1' name='parameters' type='@'/>
 <arg declared_type='void (^)(AFHTTPRequestOperation *, id)' function_pointer='true' index='2' name='success' type='@?'>
 <arg declared_type='AFHTTPRequestOperation*' type='@'/>
 <arg declared_type='id' type='@'/>
@@ -214,7 +214,7 @@
 </method>
 <method selector='PUT:parameters:success:failure:'>
 <arg declared_type='NSString*' index='0' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='1' name='parameters' type='@'/>
+<arg declared_type='id' index='1' name='parameters' type='@'/>
 <arg declared_type='void (^)(AFHTTPRequestOperation *, id)' function_pointer='true' index='2' name='success' type='@?'>
 <arg declared_type='AFHTTPRequestOperation*' type='@'/>
 <arg declared_type='id' type='@'/>
@@ -263,6 +263,10 @@
 <arg declared_type='NSOperationQueue*' index='0' name='operationQueue' type='@'/>
 <retval declared_type='void' type='v'/>
 </method>
+<method selector='setReachabilityManager:'>
+<arg declared_type='AFNetworkReachabilityManager*' index='0' name='reachabilityManager' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
 <method selector='setRequestSerializer:'>
 <arg declared_type='AFHTTPRequestSerializer*' index='0' name='requestSerializer' type='@'/>
 <retval declared_type='void' type='v'/>
@@ -290,6 +294,18 @@
 <method selector='HTTPRequestHeaders'>
 <retval declared_type='NSDictionary*' type='@'/>
 </method>
+<method selector='HTTPShouldHandleCookies'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method selector='HTTPShouldUsePipelining'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method selector='allowsCellularAccess'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method selector='cachePolicy'>
+<retval declared_type='NSURLRequestCachePolicy' type='I' type64='Q'/>
+</method>
 <method selector='clearAuthorizationHeader'>
 <retval declared_type='void' type='v'/>
 </method>
@@ -314,21 +330,37 @@
 <arg declared_type='NSError**' index='4' name='error' type='^@'/>
 <retval declared_type='NSMutableURLRequest*' type='@'/>
 </method>
+<method selector='networkServiceType'>
+<retval declared_type='NSURLRequestNetworkServiceType' type='I' type64='Q'/>
+</method>
 <method selector='requestWithMethod:URLString:parameters:'>
 <arg declared_type='NSString*' index='0' name='method' type='@'/>
 <arg declared_type='NSString*' index='1' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='2' name='parameters' type='@'/>
+<arg declared_type='id' index='2' name='parameters' type='@'/>
 <retval declared_type='NSMutableURLRequest*' type='@'/>
 </method>
 <method selector='requestWithMethod:URLString:parameters:error:'>
 <arg declared_type='NSString*' index='0' name='method' type='@'/>
 <arg declared_type='NSString*' index='1' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='2' name='parameters' type='@'/>
+<arg declared_type='id' index='2' name='parameters' type='@'/>
 <arg declared_type='NSError**' index='3' name='error' type='^@'/>
+<retval declared_type='NSMutableURLRequest*' type='@'/>
+</method>
+<method selector='requestWithMultipartFormRequest:writingStreamContentsToFile:completionHandler:'>
+<arg declared_type='NSURLRequest*' index='0' name='request' type='@'/>
+<arg declared_type='NSURL*' index='1' name='fileURL' type='@'/>
+<arg declared_type='void (^)(NSError *)' function_pointer='true' index='2' name='handler' type='@?'>
+<arg declared_type='NSError*' type='@'/>
+<retval declared_type='void' type='v'/>
+</arg>
 <retval declared_type='NSMutableURLRequest*' type='@'/>
 </method>
 <method class_method='true' selector='serializer'>
 <retval declared_type='id' type='@'/>
+</method>
+<method selector='setAllowsCellularAccess:'>
+<arg declared_type='BOOL' index='0' name='allowsCellularAccess' type='B'/>
+<retval declared_type='void' type='v'/>
 </method>
 <method selector='setAuthorizationHeaderFieldWithToken:'>
 <arg declared_type='NSString*' index='0' name='token' type='@'/>
@@ -339,8 +371,24 @@
 <arg declared_type='NSString*' index='1' name='password' type='@'/>
 <retval declared_type='void' type='v'/>
 </method>
+<method selector='setCachePolicy:'>
+<arg declared_type='NSURLRequestCachePolicy' index='0' name='cachePolicy' type='I' type64='Q'/>
+<retval declared_type='void' type='v'/>
+</method>
 <method selector='setHTTPMethodsEncodingParametersInURI:'>
 <arg declared_type='NSSet*' index='0' name='HTTPMethodsEncodingParametersInURI' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setHTTPShouldHandleCookies:'>
+<arg declared_type='BOOL' index='0' name='HTTPShouldHandleCookies' type='B'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setHTTPShouldUsePipelining:'>
+<arg declared_type='BOOL' index='0' name='HTTPShouldUsePipelining' type='B'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setNetworkServiceType:'>
+<arg declared_type='NSURLRequestNetworkServiceType' index='0' name='networkServiceType' type='I' type64='Q'/>
 <retval declared_type='void' type='v'/>
 </method>
 <method selector='setQueryStringSerializationWithBlock:'>
@@ -360,6 +408,10 @@
 <arg declared_type='NSStringEncoding' index='0' name='stringEncoding' type='I' type64='Q'/>
 <retval declared_type='void' type='v'/>
 </method>
+<method selector='setTimeoutInterval:'>
+<arg declared_type='NSTimeInterval' index='0' name='timeoutInterval' type='d'/>
+<retval declared_type='void' type='v'/>
+</method>
 <method selector='setValue:forHTTPHeaderField:'>
 <arg declared_type='NSString*' index='0' name='value' type='@'/>
 <arg declared_type='NSString*' index='1' name='field' type='@'/>
@@ -367,6 +419,9 @@
 </method>
 <method selector='stringEncoding'>
 <retval declared_type='NSStringEncoding' type='I' type64='Q'/>
+</method>
+<method selector='timeoutInterval'>
+<retval declared_type='NSTimeInterval' type='d'/>
 </method>
 </class>
 <class name='AFHTTPResponseSerializer'>
@@ -404,7 +459,7 @@
 <class name='AFHTTPSessionManager'>
 <method selector='DELETE:parameters:success:failure:'>
 <arg declared_type='NSString*' index='0' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='1' name='parameters' type='@'/>
+<arg declared_type='id' index='1' name='parameters' type='@'/>
 <arg declared_type='void (^)(NSURLSessionDataTask *, id)' function_pointer='true' index='2' name='success' type='@?'>
 <arg declared_type='NSURLSessionDataTask*' type='@'/>
 <arg declared_type='id' type='@'/>
@@ -419,7 +474,7 @@
 </method>
 <method selector='GET:parameters:success:failure:'>
 <arg declared_type='NSString*' index='0' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='1' name='parameters' type='@'/>
+<arg declared_type='id' index='1' name='parameters' type='@'/>
 <arg declared_type='void (^)(NSURLSessionDataTask *, id)' function_pointer='true' index='2' name='success' type='@?'>
 <arg declared_type='NSURLSessionDataTask*' type='@'/>
 <arg declared_type='id' type='@'/>
@@ -434,7 +489,7 @@
 </method>
 <method selector='HEAD:parameters:success:failure:'>
 <arg declared_type='NSString*' index='0' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='1' name='parameters' type='@'/>
+<arg declared_type='id' index='1' name='parameters' type='@'/>
 <arg declared_type='void (^)(NSURLSessionDataTask *)' function_pointer='true' index='2' name='success' type='@?'>
 <arg declared_type='NSURLSessionDataTask*' type='@'/>
 <retval declared_type='void' type='v'/>
@@ -448,7 +503,7 @@
 </method>
 <method selector='PATCH:parameters:success:failure:'>
 <arg declared_type='NSString*' index='0' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='1' name='parameters' type='@'/>
+<arg declared_type='id' index='1' name='parameters' type='@'/>
 <arg declared_type='void (^)(NSURLSessionDataTask *, id)' function_pointer='true' index='2' name='success' type='@?'>
 <arg declared_type='NSURLSessionDataTask*' type='@'/>
 <arg declared_type='id' type='@'/>
@@ -463,7 +518,7 @@
 </method>
 <method selector='POST:parameters:constructingBodyWithBlock:success:failure:'>
 <arg declared_type='NSString*' index='0' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='1' name='parameters' type='@'/>
+<arg declared_type='id' index='1' name='parameters' type='@'/>
 <arg declared_type='void (^)(id)' function_pointer='true' index='2' name='block' type='@?'>
 <arg declared_type='id' type='@'/>
 <retval declared_type='void' type='v'/>
@@ -482,7 +537,7 @@
 </method>
 <method selector='POST:parameters:success:failure:'>
 <arg declared_type='NSString*' index='0' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='1' name='parameters' type='@'/>
+<arg declared_type='id' index='1' name='parameters' type='@'/>
 <arg declared_type='void (^)(NSURLSessionDataTask *, id)' function_pointer='true' index='2' name='success' type='@?'>
 <arg declared_type='NSURLSessionDataTask*' type='@'/>
 <arg declared_type='id' type='@'/>
@@ -497,7 +552,7 @@
 </method>
 <method selector='PUT:parameters:success:failure:'>
 <arg declared_type='NSString*' index='0' name='URLString' type='@'/>
-<arg declared_type='NSDictionary*' index='1' name='parameters' type='@'/>
+<arg declared_type='id' index='1' name='parameters' type='@'/>
 <arg declared_type='void (^)(NSURLSessionDataTask *, id)' function_pointer='true' index='2' name='success' type='@?'>
 <arg declared_type='NSURLSessionDataTask*' type='@'/>
 <arg declared_type='id' type='@'/>
@@ -557,16 +612,9 @@
 </method>
 </class>
 <class name='AFJSONRequestSerializer'>
-<method selector='format'>
-<retval declared_type='NSPropertyListFormat' type='I' type64='Q'/>
-</method>
 <method class_method='true' selector='serializerWithWritingOptions:'>
 <arg declared_type='NSJSONWritingOptions' index='0' name='writingOptions' type='I' type64='Q'/>
 <retval declared_type='id' type='@'/>
-</method>
-<method selector='setFormat:'>
-<arg declared_type='NSPropertyListFormat' index='0' name='format' type='I' type64='Q'/>
-<retval declared_type='void' type='v'/>
 </method>
 <method selector='setWritingOptions:'>
 <arg declared_type='NSJSONWritingOptions' index='0' name='writingOptions' type='I' type64='Q'/>
@@ -580,12 +628,19 @@
 <method selector='readingOptions'>
 <retval declared_type='NSJSONReadingOptions' type='I' type64='Q'/>
 </method>
+<method selector='removesKeysWithNullValues'>
+<retval declared_type='BOOL' type='B'/>
+</method>
 <method class_method='true' selector='serializerWithReadingOptions:'>
 <arg declared_type='NSJSONReadingOptions' index='0' name='readingOptions' type='I' type64='Q'/>
 <retval declared_type='id' type='@'/>
 </method>
 <method selector='setReadingOptions:'>
 <arg declared_type='NSJSONReadingOptions' index='0' name='readingOptions' type='I' type64='Q'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setRemovesKeysWithNullValues:'>
+<arg declared_type='BOOL' index='0' name='removesKeysWithNullValues' type='B'/>
 <retval declared_type='void' type='v'/>
 </method>
 </class>
@@ -928,6 +983,10 @@
 <method selector='dataTasks'>
 <retval declared_type='NSArray*' type='@'/>
 </method>
+<method selector='downloadProgressForTask:'>
+<arg declared_type='NSURLSessionDownloadTask*' index='0' name='downloadTask' type='@'/>
+<retval declared_type='NSProgress*' type='@'/>
+</method>
 <method selector='downloadTaskWithRequest:progress:destination:completionHandler:'>
 <arg declared_type='NSURLRequest*' index='0' name='request' type='@'/>
 <arg declared_type='NSProgress**' index='1' name='progress' type='^@'/>
@@ -1067,6 +1126,10 @@
 </arg>
 <retval declared_type='void' type='v'/>
 </method>
+<method selector='setReachabilityManager:'>
+<arg declared_type='AFNetworkReachabilityManager*' index='0' name='reachabilityManager' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
 <method selector='setResponseSerializer:'>
 <arg declared_type='id' index='0' name='responseSerializer' type='@'/>
 <retval declared_type='void' type='v'/>
@@ -1122,6 +1185,14 @@
 </arg>
 <retval declared_type='void' type='v'/>
 </method>
+<method selector='setTaskNeedNewBodyStreamBlock:'>
+<arg declared_type='NSInputStream *(^)(NSURLSession *, NSURLSessionTask *)' function_pointer='true' index='0' name='block' type='@?'>
+<arg declared_type='NSURLSession*' type='@'/>
+<arg declared_type='NSURLSessionTask*' type='@'/>
+<retval declared_type='NSInputStream*' type='@'/>
+</arg>
+<retval declared_type='void' type='v'/>
+</method>
 <method selector='setTaskWillPerformHTTPRedirectionBlock:'>
 <arg declared_type='NSURLRequest *(^)(NSURLSession *, NSURLSessionTask *, NSURLResponse *, NSURLRequest *)' function_pointer='true' index='0' name='block' type='@?'>
 <arg declared_type='NSURLSession*' type='@'/>
@@ -1134,6 +1205,10 @@
 </method>
 <method selector='tasks'>
 <retval declared_type='NSArray*' type='@'/>
+</method>
+<method selector='uploadProgressForTask:'>
+<arg declared_type='NSURLSessionUploadTask*' index='0' name='uploadTask' type='@'/>
+<retval declared_type='NSProgress*' type='@'/>
 </method>
 <method selector='uploadTaskWithRequest:fromData:progress:completionHandler:'>
 <arg declared_type='NSURLRequest*' index='0' name='request' type='@'/>
@@ -1493,6 +1568,16 @@
 <method selector='setProgressWithUploadProgressOfTask:animated:'>
 <arg declared_type='NSURLSessionUploadTask*' index='0' name='task' type='@'/>
 <arg declared_type='BOOL' index='1' name='animated' type='B'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='UIRefreshControl'>
+<method selector='setRefreshingWithStateOfOperation:'>
+<arg declared_type='AFURLConnectionOperation*' index='0' name='operation' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setRefreshingWithStateOfTask:'>
+<arg declared_type='NSURLSessionTask*' index='0' name='task' type='@'/>
 <retval declared_type='void' type='v'/>
 </method>
 </class>
