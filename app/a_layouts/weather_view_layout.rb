@@ -44,9 +44,9 @@ module WeatherViewLayout
   def init_scroll_view
     @scroll_view = view.viewWithTag SCROLL_VIEW
     @scroll_view.frame = CGRectMake(0, 0, App.window.frame.size.width, App.window.frame.size.height)
-    @scroll_view.contentSize = CGSizeMake(@scroll_view.frame.size.width * @number_of_pages, App.window.frame.size.height-68)
+    @scroll_view.contentSize = CGSizeMake(App.window.frame.size.width * @number_of_pages, App.window.frame.size.height-68)
     @scroll_view.delegate = self
-
+    @scroll_view.scrollEnabled = true
     @scroll_view
   end
 
@@ -55,7 +55,7 @@ module WeatherViewLayout
     @pageControl.frame = CGRectMake(0, @scroll_view.frame.size.height - 130, App.window.frame.size.width, 80)
     @pageControl.numberOfPages = @number_of_pages
     @pageControl.currentPage = 0
-    self.view.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action: 'toggle_views'))
+
     @pageControl.addTarget(self, action: 'clickPageControl:', forControlEvents: UIControlEventAllEvents)
     @page_control
   end
@@ -122,8 +122,10 @@ module WeatherViewLayout
     @background_image.setImage image
     @scroll_view.fade_out
     @background_image.fade_in
-    3.times do
-      @background_image.delta_to [1000, 0], duration: 20.0
+    UIView.animation_chain do
+      @background_image.move_to [0, 0]
+    end.and_then do
+      @background_image.delta_to [-1000, 0], duration: 10.0
     end
 
   end

@@ -28,6 +28,7 @@ class WeatherViewController < UIViewController
     @image_views ||= []
     @data ||= []
 
+
     init_navigation_bar
 
     init_scroll_view
@@ -51,14 +52,18 @@ class WeatherViewController < UIViewController
       @indicator.stopAnimating if @animate
       @loading = false
       init_page_control
+      self.view.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action: 'toggle_views'))
       if @data
         landscape_images = @data['photos'].select { |image| image['width'].to_i > image['height'].to_i }
         portrait_images = @data['photos'].select { |image| image['width'].to_i <= image['height'].to_i }
+        landscape_images = portrait_images if landscape_images.empty?
+        portrait_images = landscape_images if portrait_images.empty?
 
 
         page = 0
         @background_image.fade_out
         @scroll_view.show
+        @scroll_view.fade_in
         set_location_name.show
         set_forecast_text(page).show
         set_forecast_temp_view_color(page).show
@@ -66,39 +71,16 @@ class WeatherViewController < UIViewController
         set_date_view_text(page).show
 
 
-        #background image
-        0.times do |i|
+        # background image
+        @number_of_pages.times do |i|
           if i % 2 == 0 #even
-            BW::HTTP.get(landscape_images[i % landscape_images.size]['photo_url']) do |response|
-              if response.ok?
-                add_image(response.body, i, 0)
-              else
-                puts 'BAD RESPONSE'
-              end
-              @animate ? animate_views : show_views
-              @location_name_view.fade_in(3.0)
-            end
-            BW::HTTP.get(landscape_images[i+1 % landscape_images.size]['photo_url']) do |response|
-              if response.ok?
-                add_image(response.body, i, 1)
-              else
-                puts 'BAD RESPONSE'
-              end
-              @animate ? animate_views : show_views
-              @location_name_view.fade_in(3.0)
-            end
+            add_image(landscape_images[i+1 % landscape_images.size]['photo_url'], i, 0)
+            add_image(landscape_images[i % landscape_images.size]['photo_url'], i, 1)
           else # odd
-            BW::HTTP.get(portrait_images[i % portrait_images.size]['photo_url']) do |response|
-              if response.ok?
-                add_image(response.body, i)
-              else
-                puts 'BAD RESPONSE'
-              end
-              @location_name_view.fade_in(3.0)
-              @animate ? animate_views : show_views
-
-            end
+            add_image(portrait_images[i % portrait_images.size]['photo_url'], i)
           end
+          @location_name_view.fade_in(3.0)
+          @animate ? animate_views : show_views
         end
         @location_name_view.fade_in(3.0)
         @animate ? animate_views : show_views
@@ -113,8 +95,8 @@ class WeatherViewController < UIViewController
     @text_views.first.alpha <= 0.0 ? animate_views(1.0) : hide_views(1.0)
   end
 
-  def scroll_viewDidScroll(scroll_view)
-    unless @animation
+  def scrollViewDidScroll(scrollView)
+    unless @loading
       newCurrentPage = (@scroll_view.contentOffset.x / @scroll_view.frame.size.width).to_i
       if newCurrentPage != @pageControl.currentPage
         @pageControl.currentPage = newCurrentPage
@@ -162,7 +144,7 @@ class WeatherViewController < UIViewController
     self.navigationItem.setHidesBackButton true
   end
 
-  def add_image(data, page, top_offset_nr=nil, height=App.window.size.height/2-33)
+  def add_image(url, page, top_offset_nr=nil, height=App.window.size.height/2-33)
     width = @scroll_view.frame.size.width
     single = false
     if top_offset_nr.nil? # do fullscreen
@@ -170,13 +152,11 @@ class WeatherViewController < UIViewController
       height = App.window.size.height # -68
       single = true
     end
-    image = UIImage.alloc.initWithData(data)
-    image.scale_to_fill([width, height], position: :center)
     view = UIImageView.alloc.initWithFrame(CGRectMake(width * page, [0, top_offset_nr*height].max, width, height))
-
-    view.image = image
+    NSLog url.to_s
+    view.url = url
+    #view.image.scale_to_fill([width, height], position: :center)
     @scroll_view.addSubview(view)
-    @scroll_view.sendSubviewToBack view
     view.fade_out
     @image_views << view
     view
