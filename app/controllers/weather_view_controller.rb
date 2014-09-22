@@ -1,5 +1,8 @@
 class WeatherViewController < UIViewController
-  attr_accessor :data, :day, :image_views, :text_views, :animate, :number_of_pages, :location_name_view, :forecast_image_view, :forecast_temp_view, :date_view, :loading
+  attr_accessor :data, :day, :image_views, :text_views, :animate, :number_of_pages, :loading,
+                :location_name_view, :forecast_image_view, :forecast_temp_view, :date_view,
+                :scroll_view, :background_image
+
   #stylesheet :weather_view
   include WeatherViewLayout
 
@@ -28,6 +31,7 @@ class WeatherViewController < UIViewController
     init_navigation_bar
 
     init_scroll_view
+    init_background_image
 
 
     init_admob
@@ -39,6 +43,7 @@ class WeatherViewController < UIViewController
     init_forecast_temp_view
     init_forecast_image_view
     init_date_view
+    @background_image.fade_in
 
 
     WeatherInfo.get do |response|
@@ -52,11 +57,13 @@ class WeatherViewController < UIViewController
 
 
         page = 0
-        set_location_name
-        set_forecast_text page
-        set_forecast_temp_view_color page
-        set_forecast_image page
-        set_date_view_text page
+        @background_image.fade_out
+        @scroll_view.show
+        set_location_name.show
+        set_forecast_text(page).show
+        set_forecast_temp_view_color(page).show
+        set_forecast_image(page).show
+        set_date_view_text(page).show
 
 
         #background image
@@ -106,9 +113,9 @@ class WeatherViewController < UIViewController
     @text_views.first.alpha <= 0.0 ? animate_views(1.0) : hide_views(1.0)
   end
 
-  def scrollViewDidScroll(scrollView)
+  def scroll_viewDidScroll(scroll_view)
     unless @animation
-      newCurrentPage = (@scrollView.contentOffset.x / @scrollView.frame.size.width).to_i
+      newCurrentPage = (@scroll_view.contentOffset.x / @scroll_view.frame.size.width).to_i
       if newCurrentPage != @pageControl.currentPage
         @pageControl.currentPage = newCurrentPage
 
@@ -137,10 +144,10 @@ class WeatherViewController < UIViewController
 
 
   def clickPageControl(sender)
-    frame = @scrollView.frame
+    frame = @scroll_view.frame
     frame.origin.x = frame.size.width * @pageControl.currentPage
 
-    @scrollView.scrollRectToVisible(frame, animated: true)
+    @scroll_view.scrollRectToVisible(frame, animated: true)
   end
 
   def init_navigation_bar
@@ -156,7 +163,7 @@ class WeatherViewController < UIViewController
   end
 
   def add_image(data, page, top_offset_nr=nil, height=App.window.size.height/2-33)
-    width = @scrollView.frame.size.width
+    width = @scroll_view.frame.size.width
     single = false
     if top_offset_nr.nil? # do fullscreen
       top_offset_nr = 0
@@ -168,8 +175,8 @@ class WeatherViewController < UIViewController
     view = UIImageView.alloc.initWithFrame(CGRectMake(width * page, [0, top_offset_nr*height].max, width, height))
 
     view.image = image
-    @scrollView.addSubview(view)
-    @scrollView.sendSubviewToBack view
+    @scroll_view.addSubview(view)
+    @scroll_view.sendSubviewToBack view
     view.fade_out
     @image_views << view
     view

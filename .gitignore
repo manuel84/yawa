@@ -17,4 +17,5 @@ nbproject
 .dat*.*
 vendor/Pods
 vendor/Pods/*
+vendor/Pods/.build
 vendor/GoogleMobileAdsSdk/build-*

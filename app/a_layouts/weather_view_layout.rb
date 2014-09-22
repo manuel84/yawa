@@ -7,6 +7,7 @@ module WeatherViewLayout
   FORECAST_DATE = 5
   SCROLL_VIEW = 6
   PAGE_CONTROL = 7
+  BACKGROUND_IMAGE = 8
 
   # imprtant constants
   WEEKDAYS = %w(Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag)
@@ -19,6 +20,7 @@ module WeatherViewLayout
     @indicator = view.viewWithTag LOADING_INDICATOR
     @indicator.hidesWhenStopped = true
     @indicator.startAnimating
+    @indicator
   end
 
   def init_location_name_view
@@ -30,6 +32,7 @@ module WeatherViewLayout
 
   def set_location_name
     @location_name_view.text = @data['name']
+    @location_name_view
   end
 
   def init_style(view)
@@ -39,17 +42,17 @@ module WeatherViewLayout
   end
 
   def init_scroll_view
-    @scrollView = view.viewWithTag SCROLL_VIEW
-    @scrollView.frame = CGRectMake(0, 0, App.window.frame.size.width, App.window.frame.size.height)
-    @scrollView.contentSize = CGSizeMake(@scrollView.frame.size.width * @number_of_pages, App.window.frame.size.height-68)
-    @scrollView.delegate = self
+    @scroll_view = view.viewWithTag SCROLL_VIEW
+    @scroll_view.frame = CGRectMake(0, 0, App.window.frame.size.width, App.window.frame.size.height)
+    @scroll_view.contentSize = CGSizeMake(@scroll_view.frame.size.width * @number_of_pages, App.window.frame.size.height-68)
+    @scroll_view.delegate = self
 
-    @scrollView
+    @scroll_view
   end
 
   def init_page_control
-    @pageControl = @scrollView.viewWithTag PAGE_CONTROL
-    @pageControl.frame = CGRectMake(0, @scrollView.frame.size.height - 130, App.window.frame.size.width, 80)
+    @pageControl = @scroll_view.viewWithTag PAGE_CONTROL
+    @pageControl.frame = CGRectMake(0, @scroll_view.frame.size.height - 130, App.window.frame.size.width, 80)
     @pageControl.numberOfPages = @number_of_pages
     @pageControl.currentPage = 0
     self.view.addGestureRecognizer(UITapGestureRecognizer.alloc.initWithTarget(self, action: 'toggle_views'))
@@ -60,6 +63,7 @@ module WeatherViewLayout
   def set_forecast_text(page)
     temperature = @data['weather_forecasts'][page]['temp']['amount'].to_i
     @forecast_temp_view.text = temperature.to_s + ' °C'
+    @forecast_temp_view
   end
 
   def set_forecast_temp_view_color(page)
@@ -72,7 +76,8 @@ module WeatherViewLayout
     other = '0'+other if other.length <= 1 # normalize '3' => '03'
     red = hex_val.hex < threshold ? other : 'ff'
     blue = hex_val.hex < threshold ? 'ff' : other #(255 - hex_val.hex).to_s(16)
-    @forecast_temp_view.backgroundColor = "##{red}#{green}#{blue}".uicolor(0.8)
+    @forecast_temp_view.backgroundColor = "##{red}#{green}#{blue}".uicolor(0.62)
+    @forecast_temp_view
   end
 
   def init_forecast_temp_view
@@ -95,6 +100,7 @@ module WeatherViewLayout
     #placeholder = UIImage.imageNamed "placeholder-avatar"
     #image_view.url = {url: "http://i.imgur.com/r4uwx.jpg", placeholder: placeholder}
     @forecast_image_view.url = @data['weather_forecasts'][page]['img_url']
+    @forecast_image_view
   end
 
   def init_date_view
@@ -107,6 +113,19 @@ module WeatherViewLayout
   def set_date_view_text(page)
     @date_view.text = (Time.now + page.days).strftime '%a, %d.%m'
     @date_view.backgroundColor = WEEKDAY_COLORS[(Time.now + page.days).strftime('%u').to_i-1].uicolor(0.8)
+    @date_view
+  end
+
+  def init_background_image
+    @background_image = view.viewWithTag BACKGROUND_IMAGE
+    image = UIImage.imageNamed 'background_animation.jpg'
+    @background_image.setImage image
+    @scroll_view.fade_out
+    @background_image.fade_in
+    3.times do
+      @background_image.delta_to [1000, 0], duration: 20.0
+    end
+
   end
 
 end
